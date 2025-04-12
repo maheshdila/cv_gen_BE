@@ -1,0 +1,140 @@
+{
+    "biography": "An undergraduate student pursuing a BSc. Engineering Honours degree in Computer Science and Engineering with a strong passion for Software Development and Machine Learning. Committed to continuous learning and teamwork, aspiring to contribute to Software Engineering and ML.",
+    "education": [
+      {
+        "degree": "BSc. Engineering (Hons)",
+        "institution": "University of Moratuwa",
+        "specialization": "Computer Science and Engineering",
+        "stream": "Data Science & Engineering",
+        "cgpa": "3.71",
+        "duration": "2022 - 2026"
+      },
+      {
+        "qualification": "G.C.E. A/Ls",
+        "school": "Badulla Central College",
+        "stream": "Physical Science",
+        "results": "3A’s - Island Rank 179",
+        "year": "2020"
+      },
+      {
+        "qualification": "G.C.E. O/Ls",
+        "school": "Badulla Viharamahadevi Girls’ College",
+        "results": "9A’s",
+        "year": "2017"
+      }
+    ],
+    "experience": [
+      {
+        "position": "Software Engineering Intern",
+        "company": "LSEG Technology",
+        "duration": "Dec 2024 - Present"
+      }
+    ],
+    "projects": [
+      {
+        "title": "AI-Enhanced Mental Health Journaling (EmoAI)",
+        "duration": "Jul 2024 - Dec 2024",
+        "description": "Uses NLP to analyze emotional states, helping psychological professionals monitor their patients.",
+        "technologies": ["Python", "Flask", "React", "Firebase", "TensorFlow", "Git"]
+      },
+      {
+        "title": "You Drink We Drive",
+        "duration": "Jun 2024 - Dec 2024",
+        "description": "Replaced a WordPress site with a dynamic website for a safe ride service targeting intoxicated clients.",
+        "technologies": ["React", "Spring Boot", "MySQL", "Hibernate ORM", "Git"]
+      },
+      {
+        "title": "Interactive Data Preprocessing VS Code Extension",
+        "duration": "May 2024 - Present",
+        "description": "A VS Code extension enabling interactive data cleaning and visualization.",
+        "technologies": ["JavaScript", "Python", "HTML", "CSS", "Azure", "Git", "GitHub Actions"]
+      },
+      {
+        "title": "Web Application for a Banking System (NEXUS Trust Bank)",
+        "duration": "Aug 2023 - Dec 2023",
+        "description": "Built a transaction-based web app for banking features including loans and inter-account transactions.",
+        "technologies": ["React", "Node.js", "MySQL", "Express.js", "DigitalOcean", "Git"]
+      },
+      {
+        "title": "Mobile App for Interplanetary Travelling (INFIX)",
+        "duration": "Aug 2023",
+        "description": "An imaginary concept app allowing users to book trips and share travel memories.",
+        "technologies": ["React Native", "Node.js", "Express.js", "PostgreSQL", "Prisma", "Git"]
+      }
+    ],
+    "skills": {
+      "programming_languages": ["Python", "Java", "JavaScript", "C++"],
+      "web_dev": ["Node.js/TypeScript", "React", "Express.js", "Spring Boot"],
+      "databases": ["MySQL", "PostgreSQL", "SQLite", "Prisma ORM", "Hibernate ORM", "MongoDB", "Firestore"],
+      "machine_learning": ["Scikit-learn", "TensorFlow", "MLFlow", "DagsHub"],
+      "tools": ["Git", "GitHub", "GitHub Desktop"]
+    },
+    "volunteering": [
+      {
+        "role": "Vice President of HR and Logistics",
+        "organization": "MORAMATHS - UoM",
+        "duration": "Oct 2023 - Dec 2024"
+      },
+      {
+        "role": "Lead of Education - MTUTOR",
+        "organization": "MORAMATHS",
+        "duration": "Aug 2023 - Oct 2023"
+      },
+      {
+        "role": "Project Demonstrator",
+        "organization": "EXMO",
+        "duration": "Jul 2023"
+      },
+      {
+        "role": "Web Developer",
+        "organization": "MORA LENZ",
+        "duration": "Nov 2023 - Present"
+      },
+      {
+        "role": "Team Member",
+        "organization": "FestX",
+        "duration": "Jan 2023 - Dec 2023"
+      },
+      {
+        "role": "Event Team Member",
+        "organization": "EXMO (Student Union)",
+        "duration": "Jul 2023"
+      },
+      {
+        "role": "Volunteer Teacher",
+        "organization": "Soyuru Sathkara",
+        "duration": "Apr 2023"
+      },
+      {
+        "role": "District Coordinator",
+        "organization": "Sasnaka Sansada Foundation - Ganitha Saviya",
+        "duration": "Dec 2021 - May 2022"
+      },
+      {
+        "role": "Content Editor",
+        "organization": "LearnSteer",
+        "duration": "Jan 2021 - May 2021"
+      }
+    ],
+    "achievements": [
+      "IEEEXtreme 2024 Country Rank 19",
+      "InspiHer by SLTC WIE club V 2.0 - Finalist Rank 5",
+      "IEEEXtreme 2023 Country Rank 34",
+      "MoraXTreme 2022 Rank 112",
+      "ML Olympiad - Public Rank 87",
+      "Home Credit - Credit Risk Model Stability - Public Rank",
+      "National Mathematics Competition 2016",
+      "All Island Drama Competition 2015 & 2016",
+      "National Mathematics and Science Olympiad 2012"
+    ],
+    "contact": {
+      "email": "omalya.21@cse.mrt.ac.lk",
+      "phone": "+94702104088",
+      "linkedin": "https://linkedin.com/in/omalya-vidushini",
+      "github": "https://github.com/OmalyaV",
+      "location": "Katubedda, Moratuwa"
+    },
+    "desired_role": "Machine Learning Engineer"
+  }
+  
+  

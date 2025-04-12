@@ -1,0 +1,150 @@
+{
+    "biography": "Enthusiastic Data Science and Engineering student with practical experience in AI and ML fields, specializing in Python and TensorFlow. Skilled in building and optimizing machine learning algorithms for real-world applications.",
+    "education": [
+      {
+        "degree": "BSc. Engineering",
+        "specialization": "Data Science and Engineering",
+        "institution": "University of Moratuwa",
+        "location": "Moratuwa, Sri Lanka",
+        "duration": "August 2022 - Present",
+        "cgpa": "3.209"
+      },
+      {
+        "qualification": "Diploma in Software Engineering",
+        "institution": "Institute of Java and Software Engineering",
+        "location": "Galle, Sri Lanka",
+        "duration": "December 2020 - Present"
+      },
+      {
+        "qualification": "GCE A/L",
+        "school": "Mahinda College",
+        "location": "Galle, Sri Lanka",
+        "year": "2020",
+        "results": "3A’s"
+      },
+      {
+        "qualification": "GCE O/L",
+        "school": "Mahinda College",
+        "location": "Galle, Sri Lanka",
+        "year": "2016",
+        "results": "9A’s"
+      }
+    ],
+    "experience": [
+      {
+        "position": "Trainee Software Engineer",
+        "company": "ZeroBeta Private Limited",
+        "duration": "December 2024 - Present"
+      },
+      {
+        "position": "Fullstack Developer (Freelance)",
+        "company": "Self-employed",
+        "duration": "2023 - Present"
+      }
+    ],
+    "projects": [
+      {
+        "title": "Dr. Derm – AI-based Skincare App",
+        "duration": "July 2024 - Present",
+        "description": "Developed ML models with Fast API and T4-GPU for skin condition analysis using large datasets; built a Flutter UI for real-time results.",
+        "technologies": ["Python", "Fast API", "Node.js", "TensorFlow", "T4-GPU", "Flutter", "Firebase"]
+      },
+      {
+        "title": "Godadamu LMS",
+        "duration": "May 2024 - Present",
+        "description": "Developed a scalable LMS platform with authentication, course management, and email notification using AWS EC2 and GitHub Actions.",
+        "technologies": ["Node.js", "TypeScript", "Express.js", "EJS", "Nodemailer", "GitHub Actions", "AWS EC2"]
+      },
+      {
+        "title": "MARTY Mart – Single Vendor E-Commerce Site",
+        "duration": "September 2023 - November 2023",
+        "description": "Built a Spring Boot-based e-commerce site with layered architecture and MySQL for data management.",
+        "technologies": ["Java", "Spring Boot", "JPA", "Lombok", "MySQL"]
+      }
+    ],
+    "skills": {
+      "programming_languages": ["Java", "Python", "JavaScript", "C++", "Dart"],
+      "ml_ai_frameworks": ["TensorFlow", "PyTorch", "Keras", "Scikit-learn"],
+      "data_analysis": ["Pandas", "NumPy", "SQL", "Hadoop"],
+      "deep_learning": ["CNNs", "RNNs", "LSTMs"],
+      "cloud_platforms": ["AWS", "Google Cloud", "Firebase"],
+      "dev_tools": ["Jupyter Notebook", "Google Colab", "Kaggle", "Fast API"],
+      "other_tech": ["RESTful APIs", "Matplotlib", "Seaborn"]
+    },
+    "achievements": [
+      "Bronze Medal - Sri Lanka Physics Olympiad 2019",
+      "Honourable Mention - Sri Lanka Mathematics Olympiad 2017",
+      "Second Prize - Open Mathematical Olympiad for University Students (IUHD, 2022)"
+    ],
+    "volunteering": [
+      {
+        "role": "Junior Treasurer",
+        "organization": "MoraMaths",
+        "duration": "December 2024 - Present"
+      },
+      {
+        "role": "Director of Business Development",
+        "organization": "MoraMaths",
+        "duration": "October 2023 - December 2024"
+      },
+      {
+        "role": "Chairperson",
+        "event": "Mechani Clash 1.0, IEEE RAS",
+        "duration": "July 2024 - Present"
+      },
+      {
+        "role": "Chairperson",
+        "event": "Phoenix Club, MoraMaths",
+        "duration": "April 2024 - December 2024"
+      },
+      {
+        "role": "Chairperson",
+        "event": "Billiard Introducing Event, MoraSpirit",
+        "duration": "September 2023 - February 2024"
+      },
+      {
+        "role": "Fullstack Developer",
+        "organization": "M Tutor Tech Team, MoraMaths",
+        "duration": "August 2023 - October 2023"
+      },
+      {
+        "role": "Web and Tech Pillar Member",
+        "organization": "MoraSpirit",
+        "duration": "March 2022 - March 2023"
+      }
+    ],
+    "certifications": [
+      "AWS Academy Graduate - AWS Academy Machine Learning Foundations (Feb 2024)"
+    ],
+    "contact": {
+      "email": "ramindu.21@cse.mrt.ac.lk",
+      "phone": "+94 76 980 7626",
+      "linkedin": "https://www.linkedin.com/in/Ramindu-Abeygunawardane/",
+      "github": "https://github.com/RaminduA",
+      "location": "Galle, Sri Lanka"
+    },
+    "additional": {
+      "hobbies": ["Photography", "Music"],
+      "languages": ["Sinhala (Native)", "English (Fluent)"],
+      "clubs": ["MoraMaths", "IEEE CS", "MoraSpirit", "IEEE RAS"],
+      "sports": ["Badminton", "Taekwondo", "Swimming"]
+    },
+    "references": [
+      {
+        "name": "Prof. Dulani Meedeniya",
+        "position": "Senior Lecturer, University of Moratuwa",
+        "email": "dulanim@cse.mrt.ac.lk",
+        "phone": "+94 71 393 5801",
+        "relationship": "Academic Advisor"
+      },
+      {
+        "name": "Dr. H.H.S.R. Samarasiri",
+        "position": "Senior Lecturer, University of Moratuwa",
+        "email": "supems@uom.lk",
+        "phone": "+94 77 362 8983",
+        "relationship": "Senior Lecturer, Mentor"
+      }
+    ],
+    "desired_role": "AI/ML Engineer"
+  }
+  
