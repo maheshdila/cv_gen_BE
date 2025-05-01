@@ -3,7 +3,7 @@ from pydantic import BaseModel
 import google.generativeai as genai
 import json
 import uvicorn
-from typing import Any, List
+from typing import Any, List, Optional
 
 
 # === CONFIG ===
@@ -18,15 +18,17 @@ app = FastAPI()
 
 # === Pydantic Model ===
 
+
 class CVData(BaseModel):
-    biography: str
-    education:List[Any]
-    experience: List[Any]
-    projects: List[Any]
-    skills: Any
-    achievements:List[Any]
-    contact:Any
+    biography: Optional[str]
+    education: Optional[List[Any]]
+    experience: Optional[List[Any]]
+    projects: Optional[List[Any]]
+    skills: Optional[Any]
+    achievements: Optional[List[Any]]
+    contact: Optional[Any]
     desired_role: str = "Software Engineer"
+
 
 # === Helper to build prompt ===
 def build_prompt(data: CVData):
@@ -40,6 +42,7 @@ def build_prompt(data: CVData):
     )
     return prompt
 
+
 # === POST Endpoint ===
 @app.post("/generate-cv")
 async def generate_cv(cv_data: CVData):
@@ -50,6 +53,7 @@ async def generate_cv(cv_data: CVData):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-#=== Run Server (if needed) ===
+
+# === Run Server (if needed) ===
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
