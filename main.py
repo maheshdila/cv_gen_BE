@@ -5,8 +5,10 @@ import logging
 import json
 import google.generativeai as genai
 from jinja2 import Environment, FileSystemLoader
+from typing import Optional, Dict, List, Union
 from pydantic import BaseModel
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 
 logger = logging.getLogger("uvicorn.error")
@@ -29,11 +31,24 @@ model = genai.GenerativeModel("gemini-2.0-flash")
 app = FastAPI()
 
 
-# Define expected input
-class UserQuery(BaseModel):
-    """Model for user input."""
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # You can also specify a list like ["http://localhost:3000"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-    prompt: str
+
+class UserQuery(BaseModel):
+    name: Optional[str] = None
+    other_bio_data: Optional[Dict[str, str]] = None
+    summary: Optional[str] = None
+    education: Optional[Union[str, List[Dict[str, str]]]] = None
+    work_experience: Optional[Union[str, List[Dict[str, str]]]] = None
+    skills: Optional[Union[str, List[str]]] = None
+    certifications: Optional[Union[str, List[str]]] = None
+    projects: Optional[Union[str, List[Dict[str, str]]]] = None
 
 
 env = Environment(
@@ -58,49 +73,52 @@ latex_template = env.get_template("basic.tex")
 
 # Gemini/GPT Prompt for extracting structured data
 EXTRACTION_PROMPT = """
-Extract the following fields from the user's self-description:
+Extract the following fields from this partially structured user input. If a field is already structured (e.g., a list or dict), keep it as-is. Otherwise, extract it cleanly:
+
 - name
-- location
 - email
 - phone
 - linkedin
 - github
-- website
+- summary
 - education (list with degree, university, years, gpa, coursework)
-- work experience (list with job_title, company, location, years, bullet_points)
-Return as a JSON object.
+- work_experience (list with job_title, company, location, years, bullet_points)
+- skills (list)
+- certifications (list)
+- projects (list with name, link, description)
+
 User input:
-\"\"\"
-{{ prompt }}
-\"\"\"
+```json
+{{ input_json }}
 """
 
 
 @app.post("/generate-cv/")
-async def generate_cv(user_query: UserQuery):
-    """Endpoint to generate a CV based on user input."""
-    response = model.generate_content(
-        EXTRACTION_PROMPT.replace("{{ prompt }}", user_query.prompt)
-    )
-    # Get structured data from the model
+async def generate_cv(user_input: UserQuery):
+    """Endpoint to generate a CV from partially structured input."""
+
+    # Serialize input to JSON string
+    input_json = json.dumps(user_input.dict(exclude_none=True), indent=2)
+
+    # Format and send to Gemini
+    prompt = EXTRACTION_PROMPT.replace("{{ input_json }}", input_json)
+    response = model.generate_content(prompt)
     structured_data = clean_json_string(response.text)
 
     try:
-
         data = json.loads(structured_data)
     except json.JSONDecodeError:
-        return {"error": "Model returned malformed JSON", "raw": structured_data}
+        return {"error": "Malformed JSON", "raw": structured_data}
 
     logger.info("Structured data: %s", data)
 
-    # Render LaTeX CV
+    # Render LaTeX
     rendered_cv = latex_template.render(**data)
 
-    # Save to file
     with open("output/cv.tex", "w", encoding="utf-8") as f:
         f.write(rendered_cv)
 
-    return {"message": "CV generated successfully", "latex": rendered_cv}
+    return {"message": "CV generated", "latex": rendered_cv}
 
 
 def clean_json_string(model_output: str) -> str:

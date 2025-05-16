@@ -38,13 +38,18 @@
 %====================
 \section*{Experience}
 ((* for job in work_experience *))
-\textbf{((( job.job_title )))} \hfill \textit{((( job.company )))} \hfill ((( job.years or "" )))\\
+\textbf{((( job.job_title or "" )))}
+\hfill 
+\textit{((( job.company or "" )))}
+\hfill 
+((( job.years or "" )))\\
 \begin{itemize}[leftmargin=1.5em]
-    ((* for point in job.bullet_points *))
+((* for point in job.bullet_points or [] *))
     \item ((( point )))
-    ((* endfor *))
+((* endfor *))
 \end{itemize}
 ((* endfor *))
+
 
 %====================
 % EDUCATION
@@ -53,7 +58,9 @@
 ((* for edu in education *))
 \textbf{((( edu.degree )))} \hfill ((( edu.university ))) \hfill ((( edu.years )))\\
 GPA: ((( edu.gpa )))\\
+((*  if edu.coursework *))
 Relevant Coursework: ((( edu.coursework | join(", ") )))
+((* endif *))
 ((* endfor *))
 
 %====================
