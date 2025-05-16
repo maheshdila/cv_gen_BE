@@ -26,19 +26,21 @@
 \end{center}
 
 %====================
-% SUMMARY
+% SUMMARY (optional placeholder)
 %====================
+((* if summary *))
 \section*{Summary}
 ((( summary )))
+((* endif *))
 
 %====================
 % EXPERIENCE
 %====================
 \section*{Experience}
-((* for job in experience *))
-\textbf{((( job.position )))} \hfill \textit{((( job.company )))} \hfill ((( job.years )))\\
+((* for job in work_experience *))
+\textbf{((( job.job_title )))} \hfill \textit{((( job.company )))} \hfill ((( job.years or "" )))\\
 \begin{itemize}[leftmargin=1.5em]
-    ((* for point in job.details *))
+    ((* for point in job.bullet_points *))
     \item ((( point )))
     ((* endfor *))
 \end{itemize}
@@ -49,13 +51,15 @@
 %====================
 \section*{Education}
 ((* for edu in education *))
-\textbf{((( edu.degree )))} \hfill ((( edu.institution ))) \hfill ((( edu.years )))\\
-((( edu.details )))
+\textbf{((( edu.degree )))} \hfill ((( edu.university ))) \hfill ((( edu.years )))\\
+GPA: ((( edu.gpa )))\\
+Relevant Coursework: ((( edu.coursework | join(", ") )))
 ((* endfor *))
 
 %====================
 % PROJECTS
 %====================
+((* if projects *))
 \section*{Projects}
 ((* for project in projects *))
 \textbf{((( project.name )))} --- \href{((( project.link )))}{((( project.link )))}
@@ -63,14 +67,17 @@
     \item ((( project.description )))
 \end{itemize}
 ((* endfor *))
+((* endif *))
 
 %====================
 % SKILLS
 %====================
+((* if skills *))
 \section*{Skills}
 \begin{itemize}[label={},leftmargin=0em]
     \item ((( skills | join(", ") )))
 \end{itemize}
+((* endif *))
 
 %====================
 % CERTIFICATIONS

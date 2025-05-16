@@ -1,12 +1,22 @@
-from fastapi import FastAPI, Request
-from pydantic import BaseModel
-from jinja2 import Template, Environment, FileSystemLoader
-import os
+"""FastAPI application to generate a CV using Gemini API and LaTeX templates."""
+
 import re
+import logging
+import json
+import google.generativeai as genai
+from jinja2 import Environment, FileSystemLoader
+from pydantic import BaseModel
+from fastapi import FastAPI
+
+
+logger = logging.getLogger("uvicorn.error")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
 
 # import openai
 
-import google.generativeai as genai
 
 # === Gemini API Key and Setup ===
 API_KEY = "AIzaSyB9jeDjHFp319jUiiBNaibr4KPrn9ylpDY"  # Replace with your actual API key
@@ -19,9 +29,10 @@ model = genai.GenerativeModel("gemini-2.0-flash")
 app = FastAPI()
 
 
-
 # Define expected input
 class UserQuery(BaseModel):
+    """Model for user input."""
+
     prompt: str
 
 
@@ -34,14 +45,6 @@ env = Environment(
     comment_start_string="((#",
     comment_end_string="#))",
 )
-
-data = {
-    "name": "Samith Perera",
-    "email": "samith@example.com",
-    "degree": "BSc in Computer Science",
-    "university": "University of Colombo",
-}
-
 
 latex_template = env.get_template("basic.tex")
 
@@ -75,17 +78,7 @@ User input:
 
 @app.post("/generate-cv/")
 async def generate_cv(user_query: UserQuery):
-    # Ask Gemini or GPT to extract data
-    # completion = openai.ChatCompletion.create(
-    #     model="gpt-4",  # or Gemini API call
-    #     messages=[
-    #         {"role": "system", "content": "You are a CV extractor bot."},
-    #         {
-    #             "role": "user",
-    #             "content": EXTRACTION_PROMPT.replace("{{ prompt }}", user_query.prompt),
-    #         },
-    #     ],
-    # )
+    """Endpoint to generate a CV based on user input."""
     response = model.generate_content(
         EXTRACTION_PROMPT.replace("{{ prompt }}", user_query.prompt)
     )
@@ -93,11 +86,12 @@ async def generate_cv(user_query: UserQuery):
     structured_data = clean_json_string(response.text)
 
     try:
-        import json
 
         data = json.loads(structured_data)
     except json.JSONDecodeError:
         return {"error": "Model returned malformed JSON", "raw": structured_data}
+
+    logger.info("Structured data: %s", data)
 
     # Render LaTeX CV
     rendered_cv = latex_template.render(**data)
