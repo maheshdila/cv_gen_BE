@@ -2,13 +2,12 @@
 
 from langgraph.graph import StateGraph, END
 from pydantic import BaseModel
-from jinja2 import Template, Environment, FileSystemLoader
-import os
-import re
-
-# import openai
-
+from typing import Dict, Any
 import google.generativeai as genai
+from jinja2 import Environment, FileSystemLoader
+import subpgit rocess
+import json
+import re
 
 # === Gemini API Key and Setup ===
 API_KEY = "AIzaSyB9jeDjHFp319jUiiBNaibr4KPrn9ylpDY"  # Replace with your actual API key
@@ -17,15 +16,7 @@ genai.configure(api_key=API_KEY)
 # === Choose the Gemini Model ===
 model = genai.GenerativeModel("gemini-2.0-flash")
 
-
-app = FastAPI()
-
-
-# Define expected input
-class UserQuery(BaseModel):
-    prompt: str
-
-
+# === LaTeX setup ===
 env = Environment(
     loader=FileSystemLoader("templates"),
     block_start_string="((*",
@@ -35,79 +26,95 @@ env = Environment(
     comment_start_string="((#",
     comment_end_string="#))",
 )
-
-data = {
-    "name": "Samith Perera",
-    "email": "samith@example.com",
-    "degree": "BSc in Computer Science",
-    "university": "University of Colombo",
-}
-
-
 latex_template = env.get_template("basic.tex")
 
 
-# Load your Gemini/GPT API key
-# openai.api_key = os.getenv("OPENAI_API_KEY")
-
-# # Load your LaTeX template (can be loaded from a file instead)
-# with open("templates/basic.tex", "r", encoding="utf-8") as f:
-#     latex_template = Template(f.read())
-
-# Gemini/GPT Prompt for extracting structured data
-EXTRACTION_PROMPT = """
-Extract the following fields from the user's self-description:
-- name
-- location
-- email
-- phone
-- linkedin
-- github
-- website
-- education (list with degree, university, years, gpa, coursework)
-- work experience (list with job_title, company, location, years, bullet_points)
-Return as a JSON object.
-User input:
-\"\"\"
-{{ prompt }}
-\"\"\"
-"""
-
-
-@app.post("/generate-cv/")
-async def generate_cv(user_query: UserQuery):
-    # Ask Gemini or GPT to extract data
-    # completion = openai.ChatCompletion.create(
-    #     model="gpt-4",  # or Gemini API call
-    #     messages=[
-    #         {"role": "system", "content": "You are a CV extractor bot."},
-    #         {
-    #             "role": "user",
-    #             "content": EXTRACTION_PROMPT.replace("{{ prompt }}", user_query.prompt),
-    #         },
-    #     ],
-    # )
-    response = model.generate_content(
-        EXTRACTION_PROMPT.replace("{{ prompt }}", user_query.prompt)
+# === Utility ===
+def clean_json_string(model_output: str) -> str:
+    cleaned_output = re.sub(
+        r"```json\s*|```", "", model_output.strip(), flags=re.MULTILINE
     )
-    # Get structured data from the model
-    structured_data = clean_json_string(response.text)
+    cleaned_output = cleaned_output.replace("'", '"')
+    return cleaned_output
+
+
+# === LangGraph Agent: ExtractStructuredData ===
+def extract_structured_agent(state: Dict[str, Any]) -> Dict[str, Any]:
+    input_json = json.dumps(state.raw_input, indent=2)
+    prompt = f"""
+    Extract the following fields from this user input:
+    - name, email, phone, linkedin, github, summary
+    - education (list with degree, university, years, gpa, coursework)
+    - work_experience (list with job_title, company, location, years, bullet_points)
+    - skills (list)
+    - certifications (list)
+    - projects (list with name, link, description)
+    Input:
+    ```json
+    {input_json}
+    ```
+    Output JSON only.
+    """
+    response = model.generate_content(prompt)
+    cleaned = clean_json_string(response.text)
+
+    # Remove triple backticks and optional "json"
+    cleaned = re.sub(
+        r"^```(?:json)?\s*|\s*```$", "", cleaned.strip(), flags=re.IGNORECASE
+    )
+
+    if not cleaned.strip():
+        raise ValueError("Cleaned response is empty after stripping markdown.")
 
     try:
-        import json
+        structured_data = json.loads(cleaned)
+        return {"extracted_data": structured_data}
+    except json.JSONDecodeError as e:
+        raise ValueError(
+            f"Failed to decode JSON from cleaned response:\n{cleaned}"
+        ) from e
 
-        data = json.loads(structured_data)
-    except json.JSONDecodeError:
-        return {"error": "Model returned malformed JSON", "raw": structured_data}
 
-    # Render LaTeX CV
-    rendered_cv = latex_template.render(**data)
+# === LangGraph Agent: ATS Optimization ===
+def ats_optimization_agent(state: Dict[str, Any]) -> Dict[str, Any]:
+    data = state.extracted_data
+    prompt = f"""
+    Optimize this resume data for ATS compliance.
+    - Convert summaries into strong, keyword-rich statements
+    - Convert job experience into action-verb bullet points
+    - Avoid images/graphics and follow standard formatting
+    - Keep it quantifiable and industry-specific
+    Input:
+    ```json
+    {json.dumps(data, indent=2)}
+    ```
+    Output structured JSON only.
+    """
+    response = model.generate_content(prompt)
+    optimized = clean_json_string(response.text)
 
-    # Save to file
+    optimized = re.sub(
+        r"^```(?:json)?\s*|\s*```$", "", optimized.strip(), flags=re.IGNORECASE
+    )
+
+    if not optimized.strip():
+        raise ValueError("Optimized response is empty.")
+
+    try:
+        return {"ats_optimized_data": json.loads(optimized)}
+    except json.JSONDecodeError as e:
+        raise ValueError(
+            f"Failed to decode JSON from optimized response:\n{optimized}"
+        ) from e
+
+
+# === LangGraph Agent: Render LaTeX ===
+def render_cv_agent(state: Dict[str, Any]) -> Dict[str, Any]:
+    rendered_cv = latex_template.render(**state.ats_optimized_data)
     with open("output/cv.tex", "w", encoding="utf-8") as f:
         f.write(rendered_cv)
-
-    return {"message": "CV generated successfully", "latex": rendered_cv}
+    subprocess.run(["pdflatex", "cv.tex"], cwd="output", check=True)
+    return {"message": "CV rendered and compiled", "latex": rendered_cv}
 
 
 # === LangGraph Setup ===
