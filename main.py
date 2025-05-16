@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from typing import Dict, Any
 import google.generativeai as genai
 from jinja2 import Environment, FileSystemLoader
-import subpgit rocess
+import subprocess
 import json
 import re
 
