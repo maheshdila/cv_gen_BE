@@ -1,91 +1,121 @@
-from fastapi import FastAPI, HTTPException, Request, File, UploadFile
-import fitz  # PyMuPDF
+from fastapi import FastAPI, Request
 from pydantic import BaseModel
+from jinja2 import Template, Environment, FileSystemLoader
+import os
+import re
+
+# import openai
+
 import google.generativeai as genai
-import json
-import uvicorn
-from typing import Any, List
 
-
-# === CONFIG ===
-API_KEY = "AIzaSyB9jeDjHFp319jUiiBNaibr4KPrn9ylpDY"  # Replace with your actual key
-
-# === SETUP ===
+# === Gemini API Key and Setup ===
+API_KEY = "AIzaSyB9jeDjHFp319jUiiBNaibr4KPrn9ylpDY"  # Replace with your actual API key
 genai.configure(api_key=API_KEY)
+
+# === Choose the Gemini Model ===
 model = genai.GenerativeModel("gemini-2.0-flash")
 
-# === FASTAPI APP ===
+
 app = FastAPI()
 
-# === Pydantic Model ===
+
+# Define expected input
+class UserQuery(BaseModel):
+    prompt: str
 
 
-class CVData(BaseModel):
-    biography: str
-    education: List[Any]
-    experience: List[Any]
-    projects: List[Any]
-    skills: Any
-    achievements: List[Any]
-    contact: Any
-    desired_role: str = "Software Engineer"
+env = Environment(
+    loader=FileSystemLoader("templates"),
+    block_start_string="((*",
+    block_end_string="*))",
+    variable_start_string="(((",
+    variable_end_string=")))",
+    comment_start_string="((#",
+    comment_end_string="#))",
+)
 
-class
-
-# === Helper to build prompt ===
-def build_prompt(data: CVData):
-    PROMPT = f"""
-    Extract the following information from the input text and return it in a JSON format:
-
-    - Full Name
-    - Email
-    - Phone Number
-    - Location
-    - Education (degree, university, graduation year, GPA, courses)
-    - Work Experience (company, role, responsibilities)
-    - Skills (languages, technologies)
-    - LinkedIn URL
-    - GitHub URL
-    - Interests or hobbies
-
-    Input:
-    \"\"\"{USER_INPUT}\"\"\"
-    """
-
-    # === Generate Response ===
-    response = model.generate_content(PROMPT)
-    return response
+data = {
+    "name": "Samith Perera",
+    "email": "samith@example.com",
+    "degree": "BSc in Computer Science",
+    "university": "University of Colombo",
+}
 
 
-# === POST Endpoint ===
-@app.post("/generate-cv")
-async def generate_cv(cv_data: CVData):
+latex_template = env.get_template("basic.tex")
+
+
+# Load your Gemini/GPT API key
+# openai.api_key = os.getenv("OPENAI_API_KEY")
+
+# # Load your LaTeX template (can be loaded from a file instead)
+# with open("templates/basic.tex", "r", encoding="utf-8") as f:
+#     latex_template = Template(f.read())
+
+# Gemini/GPT Prompt for extracting structured data
+EXTRACTION_PROMPT = """
+Extract the following fields from the user's self-description:
+- name
+- location
+- email
+- phone
+- linkedin
+- github
+- website
+- education (list with degree, university, years, gpa, coursework)
+- work experience (list with job_title, company, location, years, bullet_points)
+Return as a JSON object.
+User input:
+\"\"\"
+{{ prompt }}
+\"\"\"
+"""
+
+
+@app.post("/generate-cv/")
+async def generate_cv(user_query: UserQuery):
+    # Ask Gemini or GPT to extract data
+    # completion = openai.ChatCompletion.create(
+    #     model="gpt-4",  # or Gemini API call
+    #     messages=[
+    #         {"role": "system", "content": "You are a CV extractor bot."},
+    #         {
+    #             "role": "user",
+    #             "content": EXTRACTION_PROMPT.replace("{{ prompt }}", user_query.prompt),
+    #         },
+    #     ],
+    # )
+    response = model.generate_content(
+        EXTRACTION_PROMPT.replace("{{ prompt }}", user_query.prompt)
+    )
+    # Get structured data from the model
+    structured_data = clean_json_string(response.text)
+
     try:
-        prompt = build_prompt(cv_data)
-        response = model.generate_content(prompt)
-        return {"generated_cv": response.text}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        import json
+
+        data = json.loads(structured_data)
+    except json.JSONDecodeError:
+        return {"error": "Model returned malformed JSON", "raw": structured_data}
+
+    # Render LaTeX CV
+    rendered_cv = latex_template.render(**data)
+
+    # Save to file
+    with open("output/cv.tex", "w", encoding="utf-8") as f:
+        f.write(rendered_cv)
+
+    return {"message": "CV generated successfully", "latex": rendered_cv}
 
 
-# === Run Server (if needed) ===
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+def clean_json_string(model_output: str) -> str:
+    """Cleans model output by removing Markdown-style formatting and fixing single quotes."""
+    # Remove Markdown-style backticks and 'json' label
+    cleaned_output = re.sub(
+        r"```json\s*|\s*```", "", model_output.strip(), flags=re.MULTILINE
+    )
 
+    # Convert single quotes to double quotes to make it valid JSON
+    cleaned_output = cleaned_output.replace("'", '"')
 
-@app.post("/extract-text/")
-async def extract_text(file: UploadFile = File(...)):
-    if not file.filename.endswith(".pdf"):
-        return {"error": "Please upload a PDF file"}
-
-    contents = await file.read()
-
-    from io import BytesIO
-
-    text = ""
-    pdf_stream = BytesIO(contents)
-    with fitz.open(stream=pdf_stream, filetype="pdf") as doc:
-        for page in doc:
-            text += page.get_text()
-
-    return {"filename": file.filename, "extracted_text": text}
+    return cleaned_output
