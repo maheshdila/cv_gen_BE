@@ -3,9 +3,10 @@
 import re
 import logging
 import json
-import google.generativeai as genai
-from jinja2 import Environment, FileSystemLoader
+import subprocess
 from typing import Optional, Dict, List, Union
+from jinja2 import Environment, FileSystemLoader
+import google.generativeai as genai
 from pydantic import BaseModel
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -118,7 +119,18 @@ async def generate_cv(user_input: UserQuery):
     with open("output/cv.tex", "w", encoding="utf-8") as f:
         f.write(rendered_cv)
 
+    # Compile LaTeX to PDF
+    compile_latex()
+
     return {"message": "CV generated", "latex": rendered_cv}
+
+
+def compile_latex():
+    try:
+        subprocess.run(["LaTeXCompiler", "-file", "cv.tex"], cwd="output", check=True)
+        print("Compilation successful.")
+    except subprocess.CalledProcessError as e:
+        print("Compilation failed:", e)
 
 
 def clean_json_string(model_output: str) -> str:

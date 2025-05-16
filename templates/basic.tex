@@ -43,12 +43,15 @@
 \textit{((( job.company or "" )))}
 \hfill 
 ((( job.years or "" )))\\
+((* if job.bullet_points and job.bullet_points | length > 0 *))
 \begin{itemize}[leftmargin=1.5em]
-((* for point in job.bullet_points or [] *))
+((* for point in job.bullet_points *))
     \item ((( point )))
 ((* endfor *))
 \end{itemize}
+((* endif *))
 ((* endfor *))
+
 
 
 %====================
