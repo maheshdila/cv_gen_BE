@@ -1,8 +1,6 @@
 # === langgraph_cv_pipeline.py ===
 
 from langgraph.graph import StateGraph, END
-
-# from langgraph.checkpoint import MemorySaver
 from pydantic import BaseModel
 from typing import Dict, Any
 import google.generativeai as genai
@@ -11,10 +9,12 @@ import subprocess
 import json
 import re
 
-# === Configure Gemini ===
-API_KEY = "AIzaSyB9jeDjHFp319jUiiBNaibr4KPrn9ylpDY"
+# === Gemini API Key and Setup ===
+API_KEY = "AIzaSyB9jeDjHFp319jUiiBNaibr4KPrn9ylpDY"  # Replace with your actual API key
 genai.configure(api_key=API_KEY)
-model = genai.GenerativeModel("gemini-2.0-pro")
+
+# === Choose the Gemini Model ===
+model = genai.GenerativeModel("gemini-2.0-flash")
 
 # === LaTeX setup ===
 env = Environment(
@@ -32,7 +32,7 @@ latex_template = env.get_template("basic.tex")
 # === Utility ===
 def clean_json_string(model_output: str) -> str:
     cleaned_output = re.sub(
-        r"```json\\s*|\\s*```", "", model_output.strip(), flags=re.MULTILINE
+        r"```json\s*|```", "", model_output.strip(), flags=re.MULTILINE
     )
     cleaned_output = cleaned_output.replace("'", '"')
     return cleaned_output
@@ -57,13 +57,27 @@ def extract_structured_agent(state: Dict[str, Any]) -> Dict[str, Any]:
     """
     response = model.generate_content(prompt)
     cleaned = clean_json_string(response.text)
-    structured_data = json.loads(cleaned)
-    return {"structured_data": structured_data}
+
+    # Remove triple backticks and optional "json"
+    cleaned = re.sub(
+        r"^```(?:json)?\s*|\s*```$", "", cleaned.strip(), flags=re.IGNORECASE
+    )
+
+    if not cleaned.strip():
+        raise ValueError("Cleaned response is empty after stripping markdown.")
+
+    try:
+        structured_data = json.loads(cleaned)
+        return {"extracted_data": structured_data}
+    except json.JSONDecodeError as e:
+        raise ValueError(
+            f"Failed to decode JSON from cleaned response:\n{cleaned}"
+        ) from e
 
 
 # === LangGraph Agent: ATS Optimization ===
 def ats_optimization_agent(state: Dict[str, Any]) -> Dict[str, Any]:
-    data = state["structured_data"]
+    data = state.extracted_data
     prompt = f"""
     Optimize this resume data for ATS compliance.
     - Convert summaries into strong, keyword-rich statements
@@ -78,18 +92,32 @@ def ats_optimization_agent(state: Dict[str, Any]) -> Dict[str, Any]:
     """
     response = model.generate_content(prompt)
     optimized = clean_json_string(response.text)
-    return {"optimized_data": json.loads(optimized)}
+
+    optimized = re.sub(
+        r"^```(?:json)?\s*|\s*```$", "", optimized.strip(), flags=re.IGNORECASE
+    )
+
+    if not optimized.strip():
+        raise ValueError("Optimized response is empty.")
+
+    try:
+        return {"ats_optimized_data": json.loads(optimized)}
+    except json.JSONDecodeError as e:
+        raise ValueError(
+            f"Failed to decode JSON from optimized response:\n{optimized}"
+        ) from e
 
 
 # === LangGraph Agent: Render LaTeX ===
 def render_cv_agent(state: Dict[str, Any]) -> Dict[str, Any]:
-    rendered_cv = latex_template.render(**state["optimized_data"])
+    rendered_cv = latex_template.render(**state.ats_optimized_data)
     with open("output/cv.tex", "w", encoding="utf-8") as f:
         f.write(rendered_cv)
     subprocess.run(["pdflatex", "cv.tex"], cwd="output", check=True)
     return {"message": "CV rendered and compiled", "latex": rendered_cv}
 
 
+# === LangGraph Setup ===
 class CVState(BaseModel):
     raw_input: dict
     extracted_data: dict = None
@@ -97,7 +125,6 @@ class CVState(BaseModel):
     latex_code: str = None
 
 
-# === Build LangGraph ===
 workflow = StateGraph(state_schema=CVState)
 workflow.add_node("extract", extract_structured_agent)
 workflow.add_node("ats_optimize", ats_optimization_agent)
@@ -108,21 +135,6 @@ workflow.add_edge("ats_optimize", "render")
 workflow.add_edge("render", END)
 
 graph_executor = workflow.compile()
-
-initial_input = {
-    "raw_input": {
-        "name": "John Smith",
-        "github": "https://github.com/johnsmith",
-        "education": [
-            {"degree": "BSc", "institution": "ABC University", "year": "2020"}
-        ],
-        "skills": ["Python", "FastAPI"],
-        "projects": [{"title": "Cool App", "description": "Did stuff"}],
-    }
-}
-
-result = graph_executor.invoke(initial_input)
-
 
 # === FastAPI App ===
 from fastapi import FastAPI
@@ -154,7 +166,7 @@ class UserQuery(BaseModel):
 
 @app.post("/generate-cv/")
 async def generate_cv(user_input: UserQuery):
-    input_data = {"user_input": user_input.dict(exclude_none=True)}
+    input_data = {"raw_input": user_input.dict(exclude_none=True)}
     try:
         result = graph_executor.invoke(input_data)
         return {
