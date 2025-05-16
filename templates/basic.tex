@@ -1,0 +1,87 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[left=1in,right=1in,top=1in,bottom=1in]{geometry}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{fontawesome}
+\usepackage{setspace}
+\usepackage{parskip}
+
+% Define section formatting
+\titleformat{\section}{\large\bfseries\color{black}}{}{0em}{}[\titlerule]
+\titleformat{\subsection}[runin]{\bfseries\color{black}}{}{0em}{}[:]
+
+\pagestyle{empty}
+
+\begin{document}
+
+%====================
+% HEADER
+%====================
+\begin{center}
+    {\LARGE \textbf{((( name )))}}\\
+    ((( email ))) $|$ ((( phone ))) $|$ \href{((( linkedin )))}{LinkedIn} $|$ \href{((( github )))}{GitHub}
+\end{center}
+
+%====================
+% SUMMARY
+%====================
+\section*{Summary}
+((( summary )))
+
+%====================
+% EXPERIENCE
+%====================
+\section*{Experience}
+((* for job in experience *))
+\textbf{((( job.position )))} \hfill \textit{((( job.company )))} \hfill ((( job.years )))\\
+\begin{itemize}[leftmargin=1.5em]
+    ((* for point in job.details *))
+    \item ((( point )))
+    ((* endfor *))
+\end{itemize}
+((* endfor *))
+
+%====================
+% EDUCATION
+%====================
+\section*{Education}
+((* for edu in education *))
+\textbf{((( edu.degree )))} \hfill ((( edu.institution ))) \hfill ((( edu.years )))\\
+((( edu.details )))
+((* endfor *))
+
+%====================
+% PROJECTS
+%====================
+\section*{Projects}
+((* for project in projects *))
+\textbf{((( project.name )))} --- \href{((( project.link )))}{((( project.link )))}
+\begin{itemize}[leftmargin=1.5em]
+    \item ((( project.description )))
+\end{itemize}
+((* endfor *))
+
+%====================
+% SKILLS
+%====================
+\section*{Skills}
+\begin{itemize}[label={},leftmargin=0em]
+    \item ((( skills | join(", ") )))
+\end{itemize}
+
+%====================
+% CERTIFICATIONS
+%====================
+((* if certifications *))
+\section*{Certifications}
+\begin{itemize}[leftmargin=1.5em]
+((* for cert in certifications *))
+    \item ((( cert )))
+((* endfor *))
+\end{itemize}
+((* endif *))
+
+\end{document}

@@ -1,106 +1,122 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Request
 from pydantic import BaseModel
-from typing import Any, List
-from pylatex import Document, Section, Subsection, Command, Itemize
-from pylatex.utils import NoEscape
-import pandas as pd
+from jinja2 import Template, Environment, FileSystemLoader
 import os
-import uuid
+import re
+
+# import openai
+
+import google.generativeai as genai
+
+# === Gemini API Key and Setup ===
+API_KEY = "AIzaSyB9jeDjHFp319jUiiBNaibr4KPrn9ylpDY"  # Replace with your actual API key
+genai.configure(api_key=API_KEY)
+
+# === Choose the Gemini Model ===
+model = genai.GenerativeModel("gemini-2.0-flash")
+
 
 app = FastAPI()
 
 
-# === Pydantic Model ===
-class CVData(BaseModel):
-    biography: str
-    education: List[Any]
-    experience: List[Any]
-    projects: List[Any]
-    skills: Any
-    achievements: List[Any]
-    contact: Any
-    desired_role: str = "Software Engineer"
+
+# Define expected input
+class UserQuery(BaseModel):
+    prompt: str
 
 
-# === Core Generation Logic ===
-def generate_cv_files(cv_data: dict, output_dir="output"):
-    os.makedirs(output_dir, exist_ok=True)
-    uid = str(uuid.uuid4())[:8]
-    pdf_filename = os.path.join(output_dir, f"{uid}_cv.pdf")
-    csv_filename = os.path.join(output_dir, f"{uid}_cv.csv")
+env = Environment(
+    loader=FileSystemLoader("templates"),
+    block_start_string="((*",
+    block_end_string="*))",
+    variable_start_string="(((",
+    variable_end_string=")))",
+    comment_start_string="((#",
+    comment_end_string="#))",
+)
 
-    # === Generate PDF ===
-    doc = Document(os.path.join(output_dir, f"{uid}_temp"))
-    doc.preamble.append(Command("title", "Curriculum Vitae"))
-    doc.preamble.append(Command("author", cv_data["contact"].get("email", "")))
-    doc.append(NoEscape(r"\maketitle"))
-
-    with doc.create(Section("Biography")):
-        doc.append(cv_data["biography"])
-
-    with doc.create(Section("Education")):
-        for edu in cv_data["education"]:
-            doc.append(f"{edu['degree']} from {edu['institution']} ({edu['year']})\n")
-
-    with doc.create(Section("Experience")):
-        for job in cv_data["experience"]:
-            with doc.create(Subsection(job["title"])):
-                doc.append(
-                    f"{job['company']} | {job['duration']}\n\n{job['description']}"
-                )
-
-    with doc.create(Section("Projects")):
-        for project in cv_data["projects"]:
-            with doc.create(Subsection(project["name"])):
-                doc.append(
-                    f"Technologies: {', '.join(project['tech_stack'])}\n\n{project['description']}"
-                )
-
-    with doc.create(Section("Skills")):
-        with doc.create(Itemize()) as itemize:
-            for skill in cv_data["skills"]:
-                itemize.add_item(skill)
-
-    with doc.create(Section("Achievements")):
-        with doc.create(Itemize()) as itemize:
-            for ach in cv_data["achievements"]:
-                itemize.add_item(ach)
-
-    with doc.create(Section("Contact")):
-        for key, value in cv_data["contact"].items():
-            doc.append(f"{key.capitalize()}: {value}\n")
-
-    doc.generate_pdf(os.path.splitext(pdf_filename)[0], clean_tex=True)
-
-    # === Generate CSV ===
-    rows = []
-    for edu in cv_data["education"]:
-        rows.append({"type": "education", **edu})
-    for exp in cv_data["experience"]:
-        rows.append({"type": "experience", **exp})
-    for proj in cv_data["projects"]:
-        proj_data = {
-            "name": proj["name"],
-            "tech_stack": ", ".join(proj["tech_stack"]),
-            "description": proj["description"],
-        }
-        rows.append({"type": "project", **proj_data})
-    for skill in cv_data["skills"]:
-        rows.append({"type": "skill", "value": skill})
-    for ach in cv_data["achievements"]:
-        rows.append({"type": "achievement", "value": ach})
-
-    df = pd.DataFrame(rows)
-    df.to_csv(csv_filename, index=False)
-
-    return pdf_filename, csv_filename
+data = {
+    "name": "Samith Perera",
+    "email": "samith@example.com",
+    "degree": "BSc in Computer Science",
+    "university": "University of Colombo",
+}
 
 
-# === API Endpoint ===
-@app.post("/generate-cv")
-async def generate_cv(cv_data: CVData):
+latex_template = env.get_template("basic.tex")
+
+
+# Load your Gemini/GPT API key
+# openai.api_key = os.getenv("OPENAI_API_KEY")
+
+# # Load your LaTeX template (can be loaded from a file instead)
+# with open("templates/basic.tex", "r", encoding="utf-8") as f:
+#     latex_template = Template(f.read())
+
+# Gemini/GPT Prompt for extracting structured data
+EXTRACTION_PROMPT = """
+Extract the following fields from the user's self-description:
+- name
+- location
+- email
+- phone
+- linkedin
+- github
+- website
+- education (list with degree, university, years, gpa, coursework)
+- work experience (list with job_title, company, location, years, bullet_points)
+Return as a JSON object.
+User input:
+\"\"\"
+{{ prompt }}
+\"\"\"
+"""
+
+
+@app.post("/generate-cv/")
+async def generate_cv(user_query: UserQuery):
+    # Ask Gemini or GPT to extract data
+    # completion = openai.ChatCompletion.create(
+    #     model="gpt-4",  # or Gemini API call
+    #     messages=[
+    #         {"role": "system", "content": "You are a CV extractor bot."},
+    #         {
+    #             "role": "user",
+    #             "content": EXTRACTION_PROMPT.replace("{{ prompt }}", user_query.prompt),
+    #         },
+    #     ],
+    # )
+    response = model.generate_content(
+        EXTRACTION_PROMPT.replace("{{ prompt }}", user_query.prompt)
+    )
+    # Get structured data from the model
+    structured_data = clean_json_string(response.text)
+
     try:
-        pdf_path, csv_path = generate_cv_files(cv_data.dict())
-        return {"pdf_path": pdf_path, "csv_path": csv_path}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        import json
+
+        data = json.loads(structured_data)
+    except json.JSONDecodeError:
+        return {"error": "Model returned malformed JSON", "raw": structured_data}
+
+    # Render LaTeX CV
+    rendered_cv = latex_template.render(**data)
+
+    # Save to file
+    with open("output/cv.tex", "w", encoding="utf-8") as f:
+        f.write(rendered_cv)
+
+    return {"message": "CV generated successfully", "latex": rendered_cv}
+
+
+def clean_json_string(model_output: str) -> str:
+    """Cleans model output by removing Markdown-style formatting and fixing single quotes."""
+    # Remove Markdown-style backticks and 'json' label
+    cleaned_output = re.sub(
+        r"```json\s*|\s*```", "", model_output.strip(), flags=re.MULTILINE
+    )
+
+    # Convert single quotes to double quotes to make it valid JSON
+    cleaned_output = cleaned_output.replace("'", '"')
+
+    return cleaned_output

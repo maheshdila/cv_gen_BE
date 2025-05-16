@@ -1,6 +1,6 @@
-__pycache__/
+output/
 venv/
+.vscode/
+__pycache__/
 *.pyc
 *.pyo
-
-output/
