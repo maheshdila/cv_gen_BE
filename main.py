@@ -175,3 +175,6 @@ async def generate_cv(user_input: UserQuery):
         }
     except Exception as e:
         return {"error": str(e)}
+@app.get("/test")
+def api_test():
+    return {"fast api server is up and running..."}
