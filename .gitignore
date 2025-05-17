@@ -1,0 +1,7 @@
+output/
+venv/
+.vscode/
+__pycache__/
+*.pyc
+*.pyo
+cv-generator/
