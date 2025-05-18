@@ -168,6 +168,44 @@ def render_cv_agent(state: Dict[str, Any]) -> Dict[str, Any]:
         "directory": output_dir
     }
 
+# === LangGraph Agent: Upload to S3 ===
+class NoCredentialsError:
+    pass
+
+
+# === LangGraph Agent: Upload to S3 ===
+def upload_to_s3_agent(state: Dict[str, Any]) -> Dict[str, Any]:
+    pdf_path = state["pdf_path"]
+    email = state["ats_optimized_data"].get("email", "anonymous")
+    safe_email_hash = "demo"
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    s3_key = f"cvs/{safe_email_hash}_{timestamp}.pdf"
+    bucket_name = "cv-bucket-protfolio-app"  # Replace with your actual bucket name
+    region_name = "ap-southeast-1"  # Replace with your AWS region (e.g., "us-east-1")
+
+    s3_client = boto3.client("s3", region_name=region_name)
+
+    try:
+        s3_client.upload_file(pdf_path, bucket_name, s3_key)
+        print(f"File uploaded to s3://{bucket_name}/{s3_key} in region {region_name}")
+
+        # Generate pre-signed URL
+        presigned_url = s3_client.generate_presigned_url(
+            'get_object',
+            Params={'Bucket': bucket_name, 'Key': s3_key},
+            ExpiresIn=3600
+        )
+        return {"s3_url": presigned_url}
+    except FileNotFoundError:
+        return {"error": f"Error: PDF file not found at {pdf_path}"}
+    except NoCredentialsError:
+        return {"error": "Error: AWS credentials not found. Make sure IAM role is attached."}
+    except Exception as e:
+        return {"error": f"Error uploading to S3: {str(e)}"}
+
+
+
+
 
 # === LangGraph Setup ===
 class CVState(BaseModel):
@@ -175,16 +213,22 @@ class CVState(BaseModel):
     extracted_data: dict = None
     ats_optimized_data: dict = None
     latex_code: str = None
+    pdf_path: str = None
+    directory: str = None
+    s3_url:str = None
 
 
 workflow = StateGraph(state_schema=CVState)
 workflow.add_node("extract", extract_structured_agent)
 workflow.add_node("ats_optimize", ats_optimization_agent)
 workflow.add_node("render", render_cv_agent)
+workflow.add_node("upload",upload_to_s3_agent)
 workflow.set_entry_point("extract")
 workflow.add_edge("extract", "ats_optimize")
 workflow.add_edge("ats_optimize", "render")
-workflow.add_edge("render", END)
+workflow.add_edge("render", "upload")
+workflow.add_edge("upload",END)
+
 
 graph_executor = workflow.compile()
 
@@ -224,7 +268,8 @@ async def generate_cv(user_input: UserQuery):
         return {
             "message": result.get("message", "Success"),
             "latex": result.get("latex"),
-            "pdf_path":result.get("pdf_path")
+            "pdf_path":result.get("pdf_path"),
+            "s3_url": result.get("s3_url")
         }
     except Exception as e:
         return {"error": str(e)}
