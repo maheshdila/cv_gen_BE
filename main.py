@@ -9,6 +9,13 @@ import subprocess
 import json
 import re
 
+import os
+from datetime import datetime
+import hashlib
+import subprocess
+
+
+
 # === Gemini API Key and Setup ===
 API_KEY = "AIzaSyB9jeDjHFp319jUiiBNaibr4KPrn9ylpDY"  # Replace with your actual API key
 genai.configure(api_key=API_KEY)
@@ -109,12 +116,47 @@ def ats_optimization_agent(state: Dict[str, Any]) -> Dict[str, Any]:
 
 
 # === LangGraph Agent: Render LaTeX ===
+# def render_cv_agent(state: Dict[str, Any]) -> Dict[str, Any]:
+#     rendered_cv = latex_template.render(**state.ats_optimized_data)
+#     with open("output/cv.tex", "w", encoding="utf-8") as f:
+#         f.write(rendered_cv)
+#     subprocess.run(["pdflatex", "cv.tex"], cwd="output", check=True)
+#     return {"message": "CV rendered and compiled", "latex": rendered_cv}
+
+
 def render_cv_agent(state: Dict[str, Any]) -> Dict[str, Any]:
+    # Extract email if present
+    email = state.ats_optimized_data.get("email", "anonymous")
+
+    # Hash email and timestamp
+    safe_email_hash = hashlib.sha256(email.encode()).hexdigest()[:10]
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    output_dir = f"output/cv_{safe_email_hash}_{timestamp}"
+    os.makedirs(output_dir, exist_ok=True)
+
+    # Render LaTeX
     rendered_cv = latex_template.render(**state.ats_optimized_data)
-    with open("output/cv.tex", "w", encoding="utf-8") as f:
+
+    # Write .tex file
+    tex_path = os.path.join(output_dir, "cv.tex")
+    with open(tex_path, "w", encoding="utf-8") as f:
         f.write(rendered_cv)
-    subprocess.run(["pdflatex", "cv.tex"], cwd="output", check=True)
-    return {"message": "CV rendered and compiled", "latex": rendered_cv}
+
+    # Simulate `yes | pdflatex cv.tex`
+    process = subprocess.run(
+        ["pdflatex", "cv.tex"],
+        cwd=output_dir,
+        input=b"y\n" * 10,  # simulate multiple 'y' inputs
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=True
+    )
+
+    return {
+        "message": "CV rendered and compiled",
+        "latex": rendered_cv,
+        "directory": output_dir
+    }
 
 
 # === LangGraph Setup ===
@@ -175,6 +217,11 @@ async def generate_cv(user_input: UserQuery):
         }
     except Exception as e:
         return {"error": str(e)}
+
+
+
+
+
 @app.get("/test")
 def api_test():
     return {"fast api server is up and running..."}
