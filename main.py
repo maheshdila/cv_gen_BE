@@ -129,7 +129,8 @@ def render_cv_agent(state: Dict[str, Any]) -> Dict[str, Any]:
     email = state.ats_optimized_data.get("email", "anonymous")
 
     # Hash email and timestamp
-    safe_email_hash = hashlib.sha256(email.encode()).hexdigest()[:10]
+    #safe_email_hash = hashlib.sha256(email.encode()).hexdigest()[:10]
+    safe_email_hash = "demo"
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     output_dir = f"output/cv_{safe_email_hash}_{timestamp}"
     os.makedirs(output_dir, exist_ok=True)
