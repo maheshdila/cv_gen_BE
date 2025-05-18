@@ -143,12 +143,18 @@ def render_cv_agent(state: Dict[str, Any]) -> Dict[str, Any]:
         f.write(rendered_cv)
 
     # Simulate `yes | pdflatex cv.tex`
-    process = subprocess.run(
-        ["pdflatex", "cv.tex"],
+    # process = subprocess.run(
+    #     ["pdflatex", "cv.tex"],
+    #     cwd=output_dir,
+    #     input=b"y\n" * 10,  # simulate multiple 'y' inputs
+    #     stdout=subprocess.PIPE,
+    #     stderr=subprocess.PIPE,
+    #     check=True
+    # )
+    subprocess.run(
+        "yes | pdflatex cv.tex",
         cwd=output_dir,
-        input=b"y\n" * 10,  # simulate multiple 'y' inputs
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        shell=True,
         check=True
     )
 
