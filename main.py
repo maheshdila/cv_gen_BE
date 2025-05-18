@@ -159,9 +159,12 @@ def render_cv_agent(state: Dict[str, Any]) -> Dict[str, Any]:
         check=True
     )
 
+    pdf_path = os.path.join(output_dir, "cv.pdf")
+
     return {
         "message": "CV rendered and compiled",
         "latex": rendered_cv,
+        "pdf_path": pdf_path,
         "directory": output_dir
     }
 
@@ -221,6 +224,7 @@ async def generate_cv(user_input: UserQuery):
         return {
             "message": result.get("message", "Success"),
             "latex": result.get("latex"),
+            "pdf_path":result.get("pdf_path")
         }
     except Exception as e:
         return {"error": str(e)}
