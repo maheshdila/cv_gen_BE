@@ -1,8 +1,8 @@
 import boto3
 
-from ..models.cv import CVState
+from cv_gen_BE.models.cv import CVState
 from langgraph.graph import StateGraph, END
-from ..core.config import model, latex_template
+from cv_gen_BE.core.config import model, latex_template
 from datetime import datetime
 import os, json, re, subprocess
 from pydantic import BaseModel
