@@ -1,12 +1,12 @@
 # === app/services/cv_service.py ===
 from cv_gen_BE.core.langgraph_pipeline import graph_executor
-from cv_gen_BE.models.user import UserQuery
-from cv_gen_BE.db.repository import save_user_data
-from cv_gen_BE.db.dynamodb import table
+from ..models.user import UserQuery
+from ..db.repository import save_user_data
+from ..db.dynamodb import table
 
 #from app.db.repository import save_user_data
 
-async def generate_cv(user_input: UserQuery):
+async def generate_cv_from_user(user_input: UserQuery):
     input_data = {"raw_input": user_input.dict(exclude_none=True)}
     try:
         response = table.table_status  # Lazy call to check connectivity

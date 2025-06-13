@@ -1,7 +1,7 @@
 # === app/api/routes.py ===
 from fastapi import APIRouter
-from cv_gen_BE.models.user import UserQuery
-from cv_gen_BE.services.cv_service import generate_cv_from_user
+from ..models.user import UserQuery
+from ..services.cv_service import generate_cv_from_user
 
 router = APIRouter()
 
