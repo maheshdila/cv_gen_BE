@@ -1,4 +1,4 @@
-from dynamodb import table
+from db.dynamodb import table
 
 def save_user_data(email: str,data:dict):
     table.put_item(Item={"email":email, **data})

@@ -1,8 +1,8 @@
 # === app/services/cv_service.py ===
-from cv_gen_BE.core.langgraph_pipeline import graph_executor
-from cv_gen_BE.models.user import UserQuery
-from cv_gen_BE.db.repository import save_user_data
-from cv_gen_BE.db.dynamodb import table
+#from cv_gen_BE.core.langgraph_pipeline import graph_executor
+from models.user import UserQuery
+from db.repository import save_user_data
+from db.dynamodb import table
 
 #from app.db.repository import save_user_data
 
