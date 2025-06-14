@@ -1,8 +1,10 @@
 # === app/api/routes.py ===
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Depends
 from models.user import UserQuery
 from services.cv_service import generate_cv_from_user
 from services.user_service import user_query_save, get_cv_by_user_email, update_latest_raw_input
+from auth.token_verifier_utility import verify_token
+
 
 router = APIRouter()
 
@@ -24,5 +26,5 @@ async def update_query(payload: UserQuery):
     return await update_latest_raw_input(payload)
 
 @router.get("/test")
-def api_test():
+def api_test(user=Depends(verify_token)):
     return {"message": "FastAPI server is running..."}
