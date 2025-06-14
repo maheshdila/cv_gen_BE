@@ -1,15 +1,10 @@
 # === app/api/routes.py ===
-<<<<<<< HEAD
-from fastapi import APIRouter,Depends
-from models.user import UserQuery
-from services.cv_service import generate_cv_from_user
-from auth.token_verifier_utility import verify_token
-=======
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Depends
 from models.user import UserQuery
 from services.cv_service import generate_cv_from_user
 from services.user_service import user_query_save, get_cv_by_user_email, update_latest_raw_input
->>>>>>> d3ef8517dfd75e23d974ce72bd7d7a24f4d11a2b
+from auth.token_verifier_utility import verify_token
+
 
 router = APIRouter()
 
