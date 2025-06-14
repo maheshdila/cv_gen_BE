@@ -21,7 +21,7 @@ async def user_query_save(payload):
     item = {
         "email": email,   # partition key
         "created_at": now,             # sort key
-        "raw_query": raw_input,
+        "raw_input": raw_input,
     }
     # Checked up to this point
     try:
@@ -44,7 +44,7 @@ async def get_cv_by_user_email(email: str):
         if not item:
             raise HTTPException(status_code=404, detail="No records found")
         # Extract only the raw_query field and return
-        return item["raw_query"]
+        return item["raw_input"]
     except HTTPException:
         # propagate 404s
         raise
