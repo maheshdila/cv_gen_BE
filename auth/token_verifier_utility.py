@@ -2,7 +2,7 @@ from fastapi import Depends, HTTPException, Header
 from jose import jwt
 import requests
 
-import core.configs as configs
+import core.config as configs
 
 def get_jwk():
     jwks_url = f"{configs.COGNITO_ISSUER}/.well-known/jwks.json"
