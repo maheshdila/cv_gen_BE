@@ -4,6 +4,8 @@ from fastapi import HTTPException
 from fastapi import status
 
 from db.dynamodb import table
+from db.repository import get_user_data
+
 
 async def user_query_save(payload):
     now = datetime.utcnow().isoformat()
@@ -38,7 +40,7 @@ async def get_cv_by_user_email(email: str):
     Fetches all raw_query strings for the given email.
     """
     try:
-        items = await table.get_user_data(email)
+        items = await get_user_data(email)
         if not items:
             raise HTTPException(status_code=404, detail="No records found")
         # Extract only the raw_query field and return
