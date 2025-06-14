@@ -4,5 +4,6 @@ def save_user_data(email: str,data:dict):
     table.put_item(Item={"email":email, **data})
 
 def get_user_data(email:str):
-    response = table.get_item(Key={"email":"sahan@email.com"})
+    response = table.get_item(Key={"email":email.strip()})
     return response.get("Item")
+

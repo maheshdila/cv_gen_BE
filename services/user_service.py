@@ -45,6 +45,7 @@ async def get_cv_by_user_email(email: str):
             raise HTTPException(status_code=404, detail="No records found")
         # Extract only the raw_query field and return
         return item["raw_input"]
+        # return item
     except HTTPException:
         # propagate 404s
         raise
