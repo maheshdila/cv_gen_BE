@@ -17,7 +17,7 @@ async def user_query_save(payload):
     email = payload.other_bio_data['email']
 
     item = {
-        "user_email": "sample@email",   # partition key
+        "email": "sample@email",   # partition key
         "created_at": now,             # sort key
         "raw_query": raw_input,
     }
