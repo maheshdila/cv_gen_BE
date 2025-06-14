@@ -14,8 +14,8 @@ async def generate_cv_from_user(user_input: UserQuery):
     except Exception as db_check_error:
         return {"error": f"DynamoDB not reachable: {str(db_check_error)}"}
     try:
-        result = graph_executor.invoke(input_data)
-        #result = {"message":"demo message","latex":"demo latex", "pdf path": "demo path","s3_url":"s3 url demo" }
+        # result = graph_executor.invoke(input_data)
+        result = {"message":"demo message","latex":"demo latex", "pdf path": "demo path","s3_url":"s3 url demo" }
         email = user_input.other_bio_data.get("email", "anonymous")
         save_user_data(email, input_data)
         return {
