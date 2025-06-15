@@ -1,107 +1,120 @@
 #import "@preview/basic-resume:0.2.8": *
-        
-// Personal Information"
+
+// Personal Information
 #let full-name = "Ramindu Abeygunawardane"
-#let address = "Galle, Sri Lanka"
-#let email = "ramindu.21@cse.mrt.ac.lk"
-#let github = "https://github.com/RaminduA"
-#let linkedin = "https://www.linkedin.com/in/Ramindu-Abeygunawardane/"
-#let phone = "+94 76 980 7626"
-#let portfolio = ""
 
 #show: resume.with(
   author: full-name,
-  location: address,
-  email: email,
-  github: github,
-  linkedin: linkedin,
-  phone: phone,
-  personal-site: portfolio,
+  author-position: center,
   accent-color: "#26428b",
   font: "New Computer Modern",
-  paper: "us-letter",
-  author-position: center,
-  personal-info-position: left,
+  paper: "us-letter"
 )
+
+#grid(
+  columns: (1fr, 1fr, 1fr),
+  align(center)[
+    phone: #link("tel:+94 76 980 7626") \
+    address: Galle, Sri Lanka
+  ],
+  align(center)[
+    #link("mailto:ramindu.21@cse.mrt.ac.lk") \
+    #link("https://www.google.com/") 
+  ],
+  align(center)[
+    #link("https://github.com/RaminduA")[GitHub] \
+    #link("https://www.linkedin.com/in/Ramindu-Abeygunawardane/")[LinkedIn] 
+  ]
+)
+
+#linebreak()
 
 == Overview
 
-Enthusiastic Data Science and Engineering student with practical experience in AI and ML fields, specializing in Python and TensorFlow. Skilled in building and optimizing machine learning algorithms for real-world applications, with a focus on data analysis and management. Eager to contribute to ML model development for real-world applications and leverage hands-on experience.
+#lorem(100)
+
+#linebreak()
 
 == Education
 
 #edu(
   institution: "University of Moratuwa",
   location: "",
-  dates: dates-helper(start-date: "2022-08", end-date: "Present"),
+  dates: dates-helper(start-date: "Aug 2022", end-date: "Present"),
   degree: "BSc. Engineering (Hons) (Data Science and Engineering)"
 )
-  - Current CGPA: 3.209
+- Current CGPA: 3.209
 
 #edu(
   institution: "Institute of Java and Software Engineering",
   location: "",
-  dates: dates-helper(start-date: "2020-12", end-date: "Present"),
-  degree: "Diploma in Software Engineering "
+  dates: dates-helper(start-date: "Dec 2020", end-date: "Present"),
+  degree: "Diploma in Software Engineering"
 )
 
 #edu(
   institution: "Mahinda College",
   location: "",
-  dates: dates-helper(start-date: "2018-01", end-date: "2020-12"),
+  dates: dates-helper(start-date: "Jan 2018", end-date: "Dec 2020"),
   degree: "G.C.E. A/L (Physical Science)"
 )
-  - 3A's
+- 3A's
 
 #edu(
   institution: "Mahinda College",
   location: "",
-  dates: dates-helper(start-date: "2006-01", end-date: "2016-12"),
+  dates: dates-helper(start-date: "Jan 2006", end-date: "Dec 2016"),
   degree: "G.C.E. O/L (General Education)"
 )
-  - 9A's
+- 9A's
+
+#linebreak()
 
 == Work Experience
-        
+
 #work(
   title: "Trainee Software Engineer",
   location: "",
   company: "ZeroBeta Private Limited",
-  dates: dates-helper(start-date: "2024-12", end-date: "Present"),
+  dates: dates-helper(start-date: "Dec 2024", end-date: "Present"),
 )
-        
+
 #work(
   title: "Fullstack Developer (Freelance)",
   location: "",
   company: "Self-employed",
-  dates: dates-helper(start-date: "2023-01", end-date: "Present"),
+  dates: dates-helper(start-date: "Jan 2023", end-date: "Present"),
 )
 
+#linebreak()
+
 == Projects
-        
+
+#link("https://www.google.com/")[🔗]
 #project(
   name: "Dr. Derm - AI-based Skincare App",
-  dates: dates-helper(start-date: "2024-07", end-date: "Present"),
-  url: ""
+  dates: dates-helper(start-date: "Jul 2024", end-date: "Present")
 )
 - Developed ML models with Fast API and T4-GPU for skin condition analysis using large datasets; built a Flutter UI for real-time results.
   - *Skills*: Python, Fast API, Node.js, TensorFlow, T4-GPU, Flutter, Firebase
-        
+
+#link("https://www.google.com/")[🔗]
 #project(
   name: "Godadamu LMS",
-  dates: dates-helper(start-date: "2024-05", end-date: "Present"),
-  url: ""
+  dates: dates-helper(start-date: "May 2024", end-date: "Present")
 )
 - Developed a scalable LMS platform with authentication, course management, and email notification using AWS EC2 and GitHub Actions.
   - *Skills*: Node.js, TypeScript, Express.js, EJS, Nodemailer, GitHub Actions, AWS EC2
-        
+
+#link("https://www.google.com/")[🔗]
 #project(
   name: "MARTY Mart - Single Vendor E-Commerce Site",
-  dates: dates-helper(start-date: "2023-09", end-date: "2023-11"),
-  url: ""
+  dates: dates-helper(start-date: "Sep 2023", end-date: "Nov 2023")
 )
 - Built a Spring Boot-based e-commerce site with layered architecture and MySQL for data management.
   - *Skills*: Java, Spring Boot, JPA, Lombok, MySQL
+
+#linebreak()
 
 == Skills
 - *Programming Languages*: Java, Python, JavaScript, C++, Dart
@@ -112,11 +125,57 @@ Enthusiastic Data Science and Engineering student with practical experience in A
 - *Dev Tools*: Jupyter Notebook, Google Colab, Kaggle, Fast API
 - *Other Technologies*: RESTful APIs, Matplotlib, Seaborn
 
+#linebreak()
+
+== Achievements
+
+#certificates(
+  name: "Bronze Medal - Sri Lanka Physics Olympiad",
+  date: "2019"
+)
+- 2019
+
+#certificates(
+  name: "Honourable Mention - Sri Lanka Mathematics Olympiad",
+  date: "2017"
+)
+- 2017
+
+#certificates(
+  name: "Second Prize - Open Mathematical Olympiad for University Students",
+  date: "2022"
+)
+- IUHD
+
+#linebreak()
+
 == Certifications
-        
+
+#link("https://www.google.com/")[🔗]
 #certificates(
   name: "AWS Academy Machine Learning Foundations",
   issuer: "AWS Academy",
-  date: "2024-02",
-  url: ""
+  date: "2024-02"
+)
+
+#linebreak()
+
+== References
+        
+#grid(
+  columns: (1fr, 1fr),
+  align(left)[
+    *Prof. Dulani Meedeniya* \
+    _Senior Lecturer_, \
+    _University of Moratuwa_ \
+    email: #link("mailto:dulanim@cse.mrt.ac.lk") \
+    phone: #link("tel:+94 71 393 5801") \
+  ],
+  align(left)[
+    *Dr. H.H.S.R. Samarasiri* \
+    _Senior Lecturer_, \
+    _University of Moratuwa_ \
+    email: #link("mailto:supems@uom.lk") \
+    phone: #link("tel:+94 77 362 8983") \
+  ]
 )

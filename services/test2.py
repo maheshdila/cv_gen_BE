@@ -21,7 +21,8 @@ def create_resume(payload, output_filename):
     doc.add_header_section()
 
     # Add overview
-    doc.add_overview_section(overview_content="""Enthusiastic Data Science and Engineering student with practical experience in AI and ML fields, specializing in Python and TensorFlow. Skilled in building and optimizing machine learning algorithms for real-world applications, with a focus on data analysis and management. Eager to contribute to ML model development for real-world applications and leverage hands-on experience.""")
+    # doc.add_overview_section(overview_content="""Enthusiastic Data Science and Engineering student with practical experience in AI and ML fields, specializing in Python and TensorFlow. Skilled in building and optimizing machine learning algorithms for real-world applications, with a focus on data analysis and management. Eager to contribute to ML model development for real-world applications and leverage hands-on experience.""")
+    doc.add_overview_section(overview_content="#lorem(100)")
 
     # Add education
     doc.add_education_section(education_list=payload.get("education"))
@@ -35,8 +36,14 @@ def create_resume(payload, output_filename):
     # Add skills
     doc.add_skills_section(skills_list=payload.get("skills"))
 
+    # Add achievements
+    doc.add_achievements_section(achievements_list=payload.get("achievements"))
+
     # Add certifications
     doc.add_certifications_section(certifications_list=payload.get("certifications"))
+
+    # Add references
+    doc.add_references_section(references_list=payload.get("referees"))
 
     doc.save_to_file(output_filename)
 
