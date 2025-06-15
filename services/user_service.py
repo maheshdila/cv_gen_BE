@@ -2,8 +2,10 @@ from datetime import datetime
 from botocore.exceptions import ClientError
 from fastapi import HTTPException
 from fastapi import status
-
+from boto3.dynamodb.conditions import Key
 from db.dynamodb import table
+from db.repository import get_user_data
+
 
 async def user_query_save(payload):
     now = datetime.utcnow().isoformat()
@@ -17,9 +19,9 @@ async def user_query_save(payload):
     email = payload.other_bio_data['email']
 
     item = {
-        "user_email": "sample@email",   # partition key
+        "email": email,   # partition key
         "created_at": now,             # sort key
-        "raw_query": raw_input,
+        "raw_input": raw_input,
     }
     # Checked up to this point
     try:
@@ -31,3 +33,39 @@ async def user_query_save(payload):
         )
 
     return {"message": "Query saved", "created_at": now}
+
+
+async def get_cv_by_user_email(email: str):
+    """
+    Fetches all raw_query strings for the given email.
+    """
+    try:
+        item = get_user_data(email)
+        if not item:
+            raise HTTPException(status_code=404, detail="No records found")
+        # Extract only the raw_query field and return
+        return item["raw_input"]
+        # return item
+    except HTTPException:
+        # propagate 404s
+        raise
+    except Exception as e:
+        # convert any other errors into a 500
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+
+async def update_latest_raw_input(payload) -> dict:
+    email = payload.other_bio_data['email']
+    raw_input = payload.dict(exclude={"email"}, exclude_none=True)
+    now = datetime.utcnow().isoformat()
+    resp = table.update_item(
+        Key={"email": email},
+        UpdateExpression="SET raw_input = :ri, created_at = :ca",
+        ExpressionAttributeValues={
+            ":ri": raw_input,
+            ":ca": now
+        },
+        ReturnValues="UPDATED_NEW"
+    )
+    return resp.get("Attributes", {})
