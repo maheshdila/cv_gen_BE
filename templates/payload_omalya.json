@@ -1,0 +1,136 @@
+{
+  "personalDetails": {
+    "fullName": "Omalya Vidushini",
+    "email": "omalya.21@cse.mrt.ac.lk",
+    "phone": "+94702104088",
+    "address": "Katubedda, Moratuwa",
+    "linkedIn": "https://linkedin.com/in/omalya-vidushini",
+    "gitHub": "https://github.com/OmalyaV",
+    "portfolio": "",
+    "receiveEmails": false
+  },
+
+  "workExperience": [
+    {
+      "jobTitle": "Software Engineering Intern",
+      "company": "LSEG Technology",
+      "location": "",
+      "startDate": "2024-12",
+      "endDate": "",
+      "description": "",
+      "currentlyWorking": true
+    }
+  ],
+
+  "education": [
+    {
+      "degree": "BSc. Engineering (Hons)",
+      "institution": "University of Moratuwa",
+      "fieldOfStudy": "Computer Science and Engineering - Data Science & Engineering",
+      "startDate": "2022-01",
+      "endDate": "2026-12",
+      "description": "Current CGPA: 3.71",
+      "currentlyStudying": true
+    },
+    {
+      "degree": "G.C.E. A/Ls",
+      "institution": "Badulla Central College",
+      "fieldOfStudy": "Physical Science",
+      "startDate": "2018-01",
+      "endDate": "2020-12",
+      "description": "3A’s - Island Rank 179",
+      "currentlyStudying": false
+    },
+    {
+      "degree": "G.C.E. O/Ls",
+      "institution": "Badulla Viharamahadevi Girls’ College",
+      "fieldOfStudy": "General Education",
+      "startDate": "2008-01",
+      "endDate": "2017-12",
+      "description": "9A’s",
+      "currentlyStudying": false
+    }
+  ],
+
+  "projects": [
+    {
+      "name": "AI-Enhanced Mental Health Journaling (EmoAI)",
+      "startDate": "2024-07",
+      "endDate": "2024-12",
+      "description": "Uses NLP to analyze emotional states, helping psychological professionals monitor their patients.",
+      "skills": ["Python", "Flask", "React", "Firebase", "TensorFlow", "Git"],
+      "link": ""
+    },
+    {
+      "name": "You Drink We Drive",
+      "startDate": "2024-06",
+      "endDate": "2024-12",
+      "description": "Replaced a WordPress site with a dynamic website for a safe ride service targeting intoxicated clients.",
+      "skills": ["React", "Spring Boot", "MySQL", "Hibernate ORM", "Git"],
+      "link": ""
+    },
+    {
+      "name": "Interactive Data Preprocessing VS Code Extension",
+      "startDate": "2024-05",
+      "endDate": "",
+      "description": "A VS Code extension enabling interactive data cleaning and visualization.",
+      "skills": ["JavaScript", "Python", "HTML", "CSS", "Azure", "Git", "GitHub Actions"],
+      "link": ""
+    },
+    {
+      "name": "Web Application for a Banking System (NEXUS Trust Bank)",
+      "startDate": "2023-08",
+      "endDate": "2023-12",
+      "description": "Built a transaction-based web app for banking features including loans and inter-account transactions.",
+      "skills": ["React", "Node.js", "MySQL", "Express.js", "DigitalOcean", "Git"],
+      "link": ""
+    },
+    {
+      "name": "Mobile App for Interplanetary Travelling (INFIX)",
+      "startDate": "2023-08",
+      "endDate": "2023-08",
+      "description": "An imaginary concept app allowing users to book trips and share travel memories.",
+      "skills": ["React Native", "Node.js", "Express.js", "PostgreSQL", "Prisma", "Git"],
+      "link": ""
+    }
+  ],
+
+  "skills": [
+    {
+      "category": "Programming Languages",
+      "technologies": ["Python", "Java", "JavaScript", "C++"]
+    },
+    {
+      "category": "Web Development",
+      "technologies": ["Node.js/TypeScript", "React", "Express.js", "Spring Boot"]
+    },
+    {
+      "category": "Databases",
+      "technologies": ["MySQL", "PostgreSQL", "SQLite", "Prisma ORM", "Hibernate ORM", "MongoDB", "Firestore"]
+    },
+    {
+      "category": "Machine Learning",
+      "technologies": ["Scikit-learn", "TensorFlow", "MLFlow", "DagsHub"]
+    },
+    {
+      "category": "Tools",
+      "technologies": ["Git", "GitHub", "GitHub Desktop"]
+    }
+  ],
+
+  "achievements": [
+    { "title": "IEEEXtreme 2024", "description": "Country Rank 19", "date": "2024" },
+    { "title": "InspiHer V 2.0", "description": "Finalist Rank 5 - SLTC WIE club", "date": "2024" },
+    { "title": "IEEEXtreme 2023", "description": "Country Rank 34", "date": "2023" },
+    { "title": "MoraXTreme 2022", "description": "Rank 112", "date": "2022" },
+    { "title": "ML Olympiad", "description": "Public Rank 87", "date": "" },
+    { "title": "Home Credit - Credit Risk Model Stability", "description": "Public Rank", "date": "" },
+    { "title": "National Mathematics Competition", "description": "Qualified in 2016", "date": "2016" },
+    { "title": "All Island Drama Competition", "description": "Participant in 2015 & 2016", "date": "2015" },
+    { "title": "National Mathematics and Science Olympiad", "description": "Participated", "date": "2012" }
+  ],
+
+  "certifications": [],
+
+  "referees": []
+}

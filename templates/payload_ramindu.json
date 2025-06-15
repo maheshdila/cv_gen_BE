@@ -1,0 +1,162 @@
+{
+  "personalDetails": {
+    "fullName": "Ramindu Abeygunawardane",
+    "email": "ramindu.21@cse.mrt.ac.lk",
+    "phone": "+94 76 980 7626",
+    "address": "Galle, Sri Lanka",
+    "linkedIn": "https://www.linkedin.com/in/Ramindu-Abeygunawardane/",
+    "gitHub": "https://github.com/RaminduA",
+    "portfolio": "",
+    "receiveEmails": false
+  },
+
+  "workExperience": [
+    {
+      "jobTitle": "Trainee Software Engineer",
+      "company": "ZeroBeta Private Limited",
+      "location": "",
+      "startDate": "2024-12",
+      "endDate": "",
+      "description": "",
+      "currentlyWorking": true
+    },
+    {
+      "jobTitle": "Fullstack Developer (Freelance)",
+      "company": "Self-employed",
+      "location": "",
+      "startDate": "2023-01",
+      "endDate": "",
+      "description": "",
+      "currentlyWorking": true
+    }
+  ],
+
+  "education": [
+    {
+      "degree": "BSc. Engineering (Hons)",
+      "institution": "University of Moratuwa",
+      "fieldOfStudy": "Data Science and Engineering",
+      "startDate": "2022-08",
+      "endDate": "2026-12",
+      "description": "Current CGPA: 3.209",
+      "currentlyStudying": true
+    },
+    {
+      "degree": "Diploma in Software Engineering",
+      "institution": "Institute of Java and Software Engineering",
+      "fieldOfStudy": "",
+      "startDate": "2020-12",
+      "endDate": "",
+      "description": "",
+      "currentlyStudying": true
+    },
+    {
+      "degree": "G.C.E. A/L",
+      "institution": "Mahinda College",
+      "fieldOfStudy": "Physical Science",
+      "startDate": "2018-01",
+      "endDate": "2020-12",
+      "description": "3A’s",
+      "currentlyStudying": false
+    },
+    {
+      "degree": "G.C.E. O/L",
+      "institution": "Mahinda College",
+      "fieldOfStudy": "General Education",
+      "startDate": "2006-01",
+      "endDate": "2016-12",
+      "description": "9A’s",
+      "currentlyStudying": false
+    }
+  ],
+
+  "projects": [
+    {
+      "name": "Dr. Derm – AI-based Skincare App",
+      "startDate": "2024-07",
+      "endDate": "",
+      "description": "Developed ML models with Fast API and T4-GPU for skin condition analysis using large datasets; built a Flutter UI for real-time results.",
+      "skills": ["Python", "Fast API", "Node.js", "TensorFlow", "T4-GPU", "Flutter", "Firebase"],
+      "link": ""
+    },
+    {
+      "name": "Godadamu LMS",
+      "startDate": "2024-05",
+      "endDate": "",
+      "description": "Developed a scalable LMS platform with authentication, course management, and email notification using AWS EC2 and GitHub Actions.",
+      "skills": ["Node.js", "TypeScript", "Express.js", "EJS", "Nodemailer", "GitHub Actions", "AWS EC2"],
+      "link": ""
+    },
+    {
+      "name": "MARTY Mart – Single Vendor E-Commerce Site",
+      "startDate": "2023-09",
+      "endDate": "2023-11",
+      "description": "Built a Spring Boot-based e-commerce site with layered architecture and MySQL for data management.",
+      "skills": ["Java", "Spring Boot", "JPA", "Lombok", "MySQL"],
+      "link": ""
+    }
+  ],
+
+  "skills": [
+    {
+      "category": "Programming Languages",
+      "technologies": ["Java", "Python", "JavaScript", "C++", "Dart"]
+    },
+    {
+      "category": "Machine Learning / AI Frameworks",
+      "technologies": ["TensorFlow", "PyTorch", "Keras", "Scikit-learn"]
+    },
+    {
+      "category": "Data Analysis",
+      "technologies": ["Pandas", "NumPy", "SQL", "Hadoop"]
+    },
+    {
+      "category": "Deep Learning",
+      "technologies": ["CNNs", "RNNs", "LSTMs"]
+    },
+    {
+      "category": "Cloud Platforms",
+      "technologies": ["AWS", "Google Cloud", "Firebase"]
+    },
+    {
+      "category": "Dev Tools",
+      "technologies": ["Jupyter Notebook", "Google Colab", "Kaggle", "Fast API"]
+    },
+    {
+      "category": "Other Technologies",
+      "technologies": ["RESTful APIs", "Matplotlib", "Seaborn"]
+    }
+  ],
+
+  "achievements": [
+    { "title": "Bronze Medal - Sri Lanka Physics Olympiad", "description": "2019", "date": "2019" },
+    { "title": "Honourable Mention - Sri Lanka Mathematics Olympiad", "description": "2017", "date": "2017" },
+    { "title": "Second Prize - Open Mathematical Olympiad for University Students", "description": "IUHD", "date": "2022" }
+  ],
+
+  "certifications": [
+    {
+      "title": "AWS Academy Machine Learning Foundations",
+      "issuer": "AWS Academy",
+      "date": "2024-02",
+      "link": ""
+    }
+  ],
+
+  "referees": [
+    {
+      "name": "Prof. Dulani Meedeniya",
+      "position": "Senior Lecturer",
+      "company": "University of Moratuwa",
+      "email": "dulanim@cse.mrt.ac.lk",
+      "phone": "+94 71 393 5801"
+    },
+    {
+      "name": "Dr. H.H.S.R. Samarasiri",
+      "position": "Senior Lecturer",
+      "company": "University of Moratuwa",
+      "email": "supems@uom.lk",
+      "phone": "+94 77 362 8983"
+    }
+  ]
+}
