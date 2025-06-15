@@ -54,26 +54,16 @@ async def get_cv_by_user_email(email: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-def get_latest_created_at(email: str) -> str:
-    resp = table.query(
-        KeyConditionExpression=Key("email").eq(email),
-        ScanIndexForward=False,  # descending on sort key
-        Limit=1
-    )
-    items = resp.get("Items", [])
-    return items[0]["created_at"] if items else None
 
 async def update_latest_raw_input(payload) -> dict:
     email = payload.other_bio_data['email']
-    latest = True
-    if not latest:
-        raise ValueError("No existing record to update")
+    raw_input = payload.dict(exclude={"email"}, exclude_none=True)
     now = datetime.utcnow().isoformat()
     resp = table.update_item(
         Key={"email": email},
         UpdateExpression="SET raw_input = :ri, created_at = :ca",
         ExpressionAttributeValues={
-            ":ri": payload,
+            ":ri": raw_input,
             ":ca": now
         },
         ReturnValues="UPDATED_NEW"
