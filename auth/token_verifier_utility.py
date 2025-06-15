@@ -11,7 +11,11 @@ def get_jwk():
 def verify_token(authorization: str = Header(...)):
     token = authorization.replace("Bearer ", "")
     jwks = get_jwk()
-    headers = jwt.get_unverified_header(token)
+    try:
+        headers = jwt.get_unverified_header(token)
+    except:
+        raise HTTPException(status_code=401, detail="invalid token")
+
     kid = headers["kid"]
     key = next((k for k in jwks["keys"] if k["kid"] == kid), None)
 
