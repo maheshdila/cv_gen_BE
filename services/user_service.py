@@ -65,12 +65,12 @@ def get_latest_created_at(email: str) -> str:
 
 async def update_latest_raw_input(payload) -> dict:
     email = payload.other_bio_data['email']
-    latest = get_latest_created_at(email)
+    latest = True
     if not latest:
         raise ValueError("No existing record to update")
     now = datetime.utcnow().isoformat()
     resp = table.update_item(
-        Key={"email": email, "created_at": latest},
+        Key={"email": email},
         UpdateExpression="SET raw_input = :ri, created_at = :ca",
         ExpressionAttributeValues={
             ":ri": payload,
