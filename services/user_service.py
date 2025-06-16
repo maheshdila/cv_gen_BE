@@ -5,6 +5,7 @@ from fastapi import status
 from boto3.dynamodb.conditions import Key
 from db.dynamodb import table
 from db.repository import get_user_data
+from models.user import UserQuery
 
 
 async def user_query_save(payload):
@@ -55,9 +56,9 @@ async def get_cv_by_user_email(email: str):
 
 
 
-async def update_latest_raw_input(payload) -> dict:
-    email = payload.other_bio_data['email']
-    raw_input = payload.dict(exclude={"email"}, exclude_none=True)
+async def update_latest_raw_input(payload: UserQuery) -> dict:
+    email = payload.formData.personalDetails['email']
+    raw_input = payload.dict(exclude_none=True)
     now = datetime.utcnow().isoformat()
     resp = table.update_item(
         Key={"email": email},
