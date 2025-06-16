@@ -9,8 +9,9 @@ from auth.token_verifier_utility import verify_token
 router = APIRouter()
 
 @router.post("/generate-cv/")
-async def generate_cv(user_input: UserQuery):
-    return await generate_cv_from_user(user_input)
+async def generate_cv(user_input: UserQuery,user: dict = Depends(verify_token)):
+    email = user_input.formData.personalDetails["email"]
+    return await generate_cv_from_user(user_input, email)
 
 @router.post("/queries-save")
 async def create_query(payload: UserQuery,user: dict = Depends(verify_token)):
