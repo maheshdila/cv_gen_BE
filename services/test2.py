@@ -2,7 +2,7 @@ import json
 from util.typst_util import TypstDocument
 
 
-# Example usage to recreate the provided resume
+# Example usage to recreate the provided résumé
 def create_resume(payload, output_filename):
     personal_details: dict = payload.get("personalDetails")
 
@@ -30,7 +30,7 @@ def create_resume(payload, output_filename):
     # Add work experiences
     doc.add_work_experience_section(work_experience_list=payload.get("workExperience"))
 
-    # Add project
+    # Add projects
     doc.add_project_section(projects_list=payload.get("projects"))
 
     # Add skills
@@ -48,7 +48,7 @@ def create_resume(payload, output_filename):
     doc.save_to_file(output_filename)
 
 
-# Generate the resume
+# Generate the résumé
 if __name__ == "__main__":
     input_json_ramindu = r"D:\Projects\Professional Portfolio Project\cv_gen_BE\templates\payload_ramindu.json"
     input_json_omalya = r"D:\Projects\Professional Portfolio Project\cv_gen_BE\templates\payload_omalya.json"
@@ -61,5 +61,5 @@ if __name__ == "__main__":
     for k,v in json_payload.items():
         print(f"{k}: {v}")
 
-    create_resume(json_payload, output_typst_ramindu)
+    create_resume(json_payload.get("formData"), output_typst_ramindu)
     print("Resume generated successfully!")
