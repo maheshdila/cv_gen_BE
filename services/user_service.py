@@ -12,7 +12,7 @@ async def user_query_save(payload):
     now = datetime.utcnow().isoformat()
     raw_input = payload.dict(exclude={"email"}, exclude_none=True)
 
-    if not payload.other_bio_data or 'email' not in payload.other_bio_data:
+    if not payload.formData.personalDetails or 'email' not in payload.formData.personalDetails:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Email not provided in other_bio_data"
