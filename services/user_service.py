@@ -10,7 +10,7 @@ from models.user import UserQuery
 
 async def user_query_save(payload,email):
     now = datetime.utcnow().isoformat()
-    raw_input = payload.dict(exclude={"email"}, exclude_none=True)
+    raw_input = payload.dict(exclude_none=True)
 
     item = {
         "email": email,   # partition key
