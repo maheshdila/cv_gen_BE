@@ -3,6 +3,7 @@ from typing import Optional, Dict, List, Union
 
 class UserQuery(BaseModel):
     name: Optional[str] = None
+    jobDescription: Optional[str] = None
     other_bio_data: Optional[Dict[str, str]] = None
     summary: Optional[str] = None
     education: Optional[Union[str, List[Dict[str, str]]]] = None
