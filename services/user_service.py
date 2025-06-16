@@ -17,7 +17,7 @@ async def user_query_save(payload):
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Email not provided in other_bio_data"
         )
-    email = payload.other_bio_data['email']
+    email = payload.formData.personalDetails['email']
 
     item = {
         "email": email,   # partition key
