@@ -6,7 +6,7 @@ from db.dynamodb import table
 
 #from app.db.repository import save_user_data
 
-async def generate_cv_from_user(user_input: UserQuery):
+async def generate_cv_from_user(user_input: UserQuery, email):
     input_data = {"raw_input": user_input.dict(exclude_none=True)}
     try:
         response = table.table_status  # Lazy call to check connectivity
@@ -16,7 +16,7 @@ async def generate_cv_from_user(user_input: UserQuery):
     try:
         # result = graph_executor.invoke(input_data)
         result = {"message":"demo message","latex":"demo latex", "pdf path": "demo path","s3_url":"s3 url demo" }
-        email = user_input.other_bio_data.get("email", "anonymous")
+        # email = user_input.other_bio_data.get("email", "anonymous")
         save_user_data(email, input_data)
         return {
             "message": result.get("message", "Success"),
