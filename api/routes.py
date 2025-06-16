@@ -13,7 +13,7 @@ async def generate_cv(user_input: UserQuery):
     return await generate_cv_from_user(user_input)
 
 @router.post("/queries-save")
-async def create_query(payload: UserQuery):
+async def create_query(payload: UserQuery,user: dict = Depends(verify_token)):
     print("message received")
     email = payload.formData.personalDetails["email"]
     return await user_query_save(payload,email)
