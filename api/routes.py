@@ -15,7 +15,8 @@ async def generate_cv(user_input: UserQuery):
 @router.post("/queries-save")
 async def create_query(payload: UserQuery):
     print("message received")
-    return await user_query_save(payload)
+    email = payload.formData.personalDetails["email"]
+    return await user_query_save(payload,email)
 
 @router.get("/queries-get")
 async def get_cv_by_email(email: str = Query(..., description="User email")):
