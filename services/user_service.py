@@ -8,16 +8,9 @@ from db.repository import get_user_data
 from models.user import UserQuery
 
 
-async def user_query_save(payload):
+async def user_query_save(payload,email):
     now = datetime.utcnow().isoformat()
     raw_input = payload.dict(exclude={"email"}, exclude_none=True)
-
-    if not payload.formData.personalDetails or 'email' not in payload.formData.personalDetails:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="Email not provided in other_bio_data"
-        )
-    email = payload.formData.personalDetails['email']
 
     item = {
         "email": email,   # partition key
