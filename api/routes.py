@@ -19,11 +19,12 @@ async def create_query(payload: UserQuery,user: dict = Depends(verify_token)):
     return await user_query_save(payload,email)
 
 @router.get("/queries-get")
-async def get_cv_by_email(email: str = Query(..., description="User email")):
+async def get_cv_by_email(email: str = Query(..., description="User email")
+                          ,user: dict = Depends(verify_token)):
     return await get_cv_by_user_email(email)
 
 @router.put("/query-update")
-async def update_query(payload: UserQuery):
+async def update_query(payload: UserQuery,user: dict = Depends(verify_token)):
     return await update_latest_raw_input(payload)
 
 @router.get("/test")
