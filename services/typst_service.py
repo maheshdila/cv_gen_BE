@@ -69,5 +69,5 @@ def generate_resume(overview: str, form_data: FormData):
         form_data=form_data,
         output_filename=typst_output_filename
     )
-    return compile_typst_to_pdf(typst_output_filename, pdf_output_filename)
-
+    compile_typst_to_pdf(typst_output_filename, pdf_output_filename)
+    return pdf_output_filename
