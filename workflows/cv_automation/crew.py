@@ -111,8 +111,8 @@ class CVAutomationWorkflow:
                     print("Optimizing for next iteration...")
 
             print("Generating CV from optimized form data...")
-            workflow_context["cv_path"] = generate_resume(workflow_context["overview"], payload.formData)
-
+            pdf_path=generate_resume(workflow_context["overview"], payload.formData)
+            print("pdf path from crew is ",pdf_path)
             #Upload final CV to S3
             #if workflow_context["cv_path"]:
 
@@ -136,7 +136,7 @@ class CVAutomationWorkflow:
 
             return {
                 "success": True,
-                "pdf path": workflow_context["cv_path"]
+                "pdf path": pdf_path
             }
 
         except Exception as e:
