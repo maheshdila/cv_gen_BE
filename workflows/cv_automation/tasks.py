@@ -63,9 +63,12 @@ class CVAutomationTasks:
             3. Ensure the overview is:
                - Tailored specifically to this job description
                - Professional and engaging
+               - Not sorter than 100 words
+               - Using first person perspective
+               - Not using any names of the projects or certifications
+               - Discussing the skills in projects
                - ATS-friendly with relevant keywords
                - Concise but impactful
-               - 100 words long
 
             Context: {form_data}
             Job Description: {job_description}
@@ -109,11 +112,11 @@ class CVAutomationTasks:
         )
 
     @staticmethod
-    def create_organize_chronology_task(agent: Agent) -> Task:
+    def create_organize_chronology_task(agent: Agent, job_description: str, form_data: dict) -> Task:
         """Task for organizing chronological information"""
         return Task(
             description="""
-            Organize education and work experience in proper reverse chronological order (most recent first).
+            Organize education and work experience in proper reverse chronological order (most recent first), which matches the candidate's job description.
 
             Your tasks:
             1. Sort workExperience array:
@@ -133,12 +136,13 @@ class CVAutomationTasks:
                - Handle incomplete dates appropriately
                - Ensure proper chronological ordering
 
-            Context: {optimized_payload}
+            Context: {form_data}
+            Job Description: {job_description}
 
             Expected Output: Updated payload with workExperience and education arrays sorted in reverse chronological order
             """,
             agent=agent,
-            expected_output="Updated payload object with workExperience and education arrays sorted in reverse chronological order"
+            expected_output="Updated payload object with workExperience and education arrays sorted in reverse chronological order (most recent first)"
         )
 
     @staticmethod

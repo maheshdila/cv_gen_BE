@@ -4,14 +4,14 @@ Defines all specialized agents for the CV automation workflow
 """
 
 from crewai import Agent, LLM
-from langchain_community.llms import HuggingFaceHub
+
 from tools import ContentAnalyzer, ContentReorderer, DateSorter, CVGenerator, ATSScorer
 
 
 class CVAutomationAgents:
     """Factory class for creating specialized CV automation agents"""
 
-    def __init__(self, llm: HuggingFaceHub):
+    def __init__(self, llm: LLM):
         self.llm = llm
         self.content_analyzer = ContentAnalyzer()
         self.content_reorderer = ContentReorderer()

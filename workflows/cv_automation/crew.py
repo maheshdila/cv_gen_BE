@@ -9,12 +9,13 @@ from typing import Any
 from datetime import datetime
 
 from crewai import Crew, Process, LLM
-from langchain_community.llms import HuggingFaceHub
 
 from agents import CVAutomationAgents
 from tasks import CVAutomationTasks
 from tools import ATSScorer, S3Uploader
 from utils import PayloadValidator
+
+from services.typst_service import generate_resume
 
 
 class CVAutomationWorkflow:
@@ -30,22 +31,20 @@ class CVAutomationWorkflow:
 
 
     @staticmethod
-    def _setup_llm() -> HuggingFaceHub:
-        """Setup Hugging Face LLM"""
-        token_label = "HF_TOKEN"
+    def _setup_llm() -> LLM:
+        """Setup Gemini LLM"""
+        token_label = "GEMINI_API_KEY"
+        load_dotenv()
         token = os.getenv(token_label)
 
         if not token:
             raise ValueError(f"{token_label} not found in environment variables")
 
-        load_dotenv()
-
         os.environ[token_label] = token
 
-        return HuggingFaceHub(
-            repo_id="HuggingFaceTB/SmolLM2-1.7B",
-            model_kwargs={"temperature": 0.1, "max_new_tokens": 500},
-            huggingfacehub_api_token=token
+        return LLM(
+            model="gemini/gemini-2.0-flash",
+            temperature=0.7,
         )
 
 
@@ -82,9 +81,10 @@ class CVAutomationWorkflow:
             }
 
             # Run optimization loop
-            while (workflow_context["iteration"] < workflow_context["max_iterations"] and
-                   workflow_context["current_ats_score"] < workflow_context["target_ats_score"]):
+            # while (workflow_context["iteration"] < workflow_context["max_iterations"] and
+            #        workflow_context["current_ats_score"] < workflow_context["target_ats_score"]):
 
+            for i in range(1):
                 workflow_context["iteration"] += 1
                 print(f"\nIteration {workflow_context['iteration']}/{workflow_context['max_iterations']}")
 
@@ -95,6 +95,12 @@ class CVAutomationWorkflow:
                 # Update context with results
                 workflow_context.update(result)
 
+                print(f"Result: {result}")
+
+                workflow_context['overview'] = result
+
+                print(f"Overview: {workflow_context['overview']}")
+
                 print(f"ATS Score: {workflow_context['current_ats_score']}/100")
 
                 if workflow_context["current_ats_score"] >= workflow_context["target_ats_score"]:
@@ -102,6 +108,8 @@ class CVAutomationWorkflow:
                     break
                 elif workflow_context["iteration"] < workflow_context["max_iterations"]:
                     print("Optimizing for next iteration...")
+
+            generate_resume(workflow_context["overview"], workflow_context["form_data"])
 
             # Upload final CV to S3
             if workflow_context["cv_path"]:
@@ -164,7 +172,6 @@ class CVAutomationWorkflow:
         )
 
         return crew
-
 
 # Usage example
 if __name__ == "__main__":

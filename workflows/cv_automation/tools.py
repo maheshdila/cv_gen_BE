@@ -342,7 +342,7 @@ class DateSorter(BaseTool):
     """Tool for sorting chronological data"""
 
     name: str = "Date Sorter"
-    description: str = "Sorts work experience and education in reverse chronological order"
+    description: str = "Sorts work experience and education in reverse chronological order (most recent first)"
 
     def _run(self, payload: dict[str, Any]) -> dict[str, Any]:
         """Sort chronological data"""
