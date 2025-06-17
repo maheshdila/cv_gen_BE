@@ -9,67 +9,69 @@ from typing import Dict, Any, List, Optional
 from datetime import datetime
 import re
 
+from models.user import UserQuery, FormData
+
 
 class PayloadValidator:
     """Validates payload structure and content"""
 
-    def validate(self, payload: Dict[str, Any]) -> bool:
+    def validate(self, payload: UserQuery) -> bool:
         """Validate payload structure and content"""
         try:
             # Check top-level structure
-            if not isinstance(payload, dict):
-                raise ValueError("Payload must be a dictionary")
+            if not isinstance(payload, UserQuery):
+                raise ValueError("Payload must be a UserQuery object")
 
             # Check required fields
             required_fields = ['jobDescription', 'formData']
             for field in required_fields:
-                if field not in payload:
+                if not hasattr(payload, field):
                     raise ValueError(f"Missing required field: {field}")
 
             # Validate job description
-            if not isinstance(payload['jobDescription'], str) or not payload['jobDescription'].strip():
+            if not isinstance(payload.jobDescription, str) or not payload.jobDescription.strip():
                 raise ValueError("jobDescription must be a non-empty string")
 
             # Validate form data structure
-            self._validate_form_data(payload['formData'])
+            self._validate_form_data(payload.formData)
 
             return True
 
         except Exception as e:
             raise ValueError(f"Payload validation failed: {str(e)}")
 
-    def _validate_form_data(self, form_data: Dict[str, Any]) -> bool:
+    def _validate_form_data(self, form_data: FormData) -> bool:
         """Validate form data structure"""
-        if not isinstance(form_data, dict):
-            raise ValueError("formData must be a dictionary")
+        if not isinstance(form_data, FormData):
+            raise ValueError("formData must be a FormData object")
 
         # Validate personal details
-        if 'personalDetails' in form_data:
-            self._validate_personal_details(form_data['personalDetails'])
+        if hasattr(form_data, 'personalDetails'):
+            self._validate_personal_details(form_data.personalDetails)
 
         # Validate arrays
         array_fields = ['workExperience', 'education', 'projects', 'skills', 'achievements', 'certifications',
                         'referees']
         for field in array_fields:
-            if field in form_data:
-                if not isinstance(form_data[field], list):
+            if hasattr(form_data, field):
+                if not isinstance(getattr(form_data, field), list):
                     raise ValueError(f"{field} must be a list")
 
                 # Validate array items based on type
                 if field == 'workExperience':
-                    self._validate_work_experience(form_data[field])
+                    self._validate_work_experience(form_data.workExperience)
                 elif field == 'education':
-                    self._validate_education(form_data[field])
+                    self._validate_education(form_data.education)
                 elif field == 'projects':
-                    self._validate_projects(form_data[field])
+                    self._validate_projects(form_data.projects)
                 elif field == 'skills':
-                    self._validate_skills(form_data[field])
+                    self._validate_skills(form_data.skills)
                 elif field == 'achievements':
-                    self._validate_achievements(form_data[field])
+                    self._validate_achievements(form_data.achievements)
                 elif field == 'certifications':
-                    self._validate_certifications(form_data[field])
+                    self._validate_certifications(form_data.certifications)
                 elif field == 'referees':
-                    self._validate_referees(form_data[field])
+                    self._validate_referees(form_data.referees)
 
         return True
 

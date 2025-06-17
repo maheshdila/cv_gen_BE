@@ -13,6 +13,7 @@ class CVAutomationTasks:
     def create_analyze_payload_task(agent: Agent) -> Task:
         """Task for analyzing the payload and job requirements"""
         return Task(
+            name="Analyze Payload Task",
             description="""
             Analyze the provided payload containing job description and candidate data.
 
@@ -49,6 +50,7 @@ class CVAutomationTasks:
     def create_generate_overview_task(agent: Agent, job_description: str, form_data: dict) -> Task:
         """Task for generating a compelling resume overview"""
         return Task(
+            name="Generate Overview Task",
             description="""
             Create a compelling resume overview/summary paragraph that perfectly aligns with the job requirements.
 
@@ -84,6 +86,7 @@ class CVAutomationTasks:
     def create_optimize_content_task(agent: Agent) -> Task:
         """Task for optimizing content relevance order"""
         return Task(
+            name="Optimize Content Task",
             description="""
             Reorder the projects, skills, certifications, and achievements arrays to best match the job requirements.
 
@@ -115,6 +118,7 @@ class CVAutomationTasks:
     def create_organize_chronology_task(agent: Agent, job_description: str, form_data: dict) -> Task:
         """Task for organizing chronological information"""
         return Task(
+            name="Organize Chronology Task",
             description="""
             Organize education and work experience in proper reverse chronological order (most recent first), which matches the candidate's job description.
 
@@ -149,6 +153,7 @@ class CVAutomationTasks:
     def create_generate_pdf_task(agent: Agent) -> Task:
         """Task for generating PDF using Typst service"""
         return Task(
+            name="Generate PDF Task",
             description="""
             Generate a professional CV PDF using the Typst service.
 
@@ -182,6 +187,7 @@ class CVAutomationTasks:
     def create_assess_quality_task(agent: Agent) -> Task:
         """Task for assessing CV quality and ATS score"""
         return Task(
+            name="Assess Quality Task",
             description="""
             Assess the generated CV's quality and calculate ATS score.
 
@@ -221,6 +227,7 @@ class CVAutomationTasks:
     def create_optimization_strategy_task(agent: Agent) -> Task:
         """Task for developing optimization strategy for next iteration"""
         return Task(
+            name="Optimization Strategy Task",
             description="""
             Analyze the ATS assessment and develop an optimization strategy for the next iteration.
 

@@ -5,7 +5,7 @@ Defines all specialized agents for the CV automation workflow
 
 from crewai import Agent, LLM
 
-from tools import ContentAnalyzer, ContentReorderer, DateSorter, CVGenerator, ATSScorer
+from .tools import ContentAnalyzer, ContentReorderer, DateSorter, CVGenerator, ATSScorer
 
 
 class CVAutomationAgents:
