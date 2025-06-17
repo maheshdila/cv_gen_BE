@@ -25,4 +25,3 @@ env = Environment(
     comment_start_string="((#",
     comment_end_string="#))",
 )
-latex_template = env.get_template("basic.tex")

@@ -10,10 +10,11 @@ from datetime import datetime
 
 from crewai import Crew, Process, LLM
 
-from agents import CVAutomationAgents
-from tasks import CVAutomationTasks
-from tools import ATSScorer, S3Uploader
-from utils import PayloadValidator
+from models.user import UserQuery
+from .agents import CVAutomationAgents
+from .tasks import CVAutomationTasks
+from .tools import ATSScorer, S3Uploader
+from .utils import PayloadValidator
 
 from services.typst_service import generate_resume
 
@@ -48,7 +49,7 @@ class CVAutomationWorkflow:
         )
 
 
-    def run(self, payload: dict[str, Any], s3_bucket_name: str) -> dict[str, Any]:
+    def run(self, payload: UserQuery, s3_bucket_name: str) -> dict[str, Any]:
         """
         Main workflow execution
 
@@ -59,6 +60,7 @@ class CVAutomationWorkflow:
         Returns:
             Dict containing final CV URL and processing details
         """
+        # print(payload)
         try:
             # Validate payload
             self.payload_validator.validate(payload)
@@ -67,23 +69,22 @@ class CVAutomationWorkflow:
 
             # Initialize workflow context
             workflow_context = {
-                "job_description": payload.get("jobDescription"),
-                "form_data": payload.get("formData"),
+                "job_description": payload.jobDescription,
+                "form_data": dict(payload.formData),
                 "s3_bucket_name": s3_bucket_name,
                 "iteration": 0,
-                "max_iterations": 3,
+                "max_iterations": 1,
                 "target_ats_score": 85,
                 "current_ats_score": 0,
-                "optimized_form_data": payload.get("formData").copy(),
+                "optimized_form_data": dict(payload.formData),
                 "overview": "",
                 "cv_path": "",
                 "final_cv_url": ""
             }
 
-            # Run optimization loop
+            # Run the optimization loop
             # while (workflow_context["iteration"] < workflow_context["max_iterations"] and
             #        workflow_context["current_ats_score"] < workflow_context["target_ats_score"]):
-
             for i in range(1):
                 workflow_context["iteration"] += 1
                 print(f"\nIteration {workflow_context['iteration']}/{workflow_context['max_iterations']}")
@@ -97,11 +98,11 @@ class CVAutomationWorkflow:
 
                 print(f"Result: {result}")
 
-                workflow_context['overview'] = result
+                workflow_context['overview'] = str(result)
 
-                print(f"Overview: {workflow_context['overview']}")
+                # print(f"Overview: {workflow_context['overview']}")
 
-                print(f"ATS Score: {workflow_context['current_ats_score']}/100")
+                # print(f"ATS Score: {workflow_context['current_ats_score']}/100")
 
                 if workflow_context["current_ats_score"] >= workflow_context["target_ats_score"]:
                     print("Target ATS score achieved!")
@@ -109,25 +110,30 @@ class CVAutomationWorkflow:
                 elif workflow_context["iteration"] < workflow_context["max_iterations"]:
                     print("Optimizing for next iteration...")
 
-            generate_resume(workflow_context["overview"], workflow_context["form_data"])
+            print("Generating CV from optimized form data...")
+            generate_resume(workflow_context["overview"], payload.formData)
 
-            # Upload final CV to S3
-            if workflow_context["cv_path"]:
-                final_url = self.s3_uploader.upload_cv(
-                    workflow_context["cv_path"],
-                    s3_bucket_name
-                )
-                workflow_context["final_cv_url"] = final_url
-                print(f"CV uploaded to S3: {final_url}")
-            else:
-                raise Exception("No CV file generated")
+            # # Upload final CV to S3
+            # if workflow_context["cv_path"]:
+            #     final_url = self.s3_uploader.upload_cv(
+            #         workflow_context["cv_path"],
+            #         s3_bucket_name
+            #     )
+            #     workflow_context["final_cv_url"] = final_url
+            #     print(f"CV uploaded to S3: {final_url}")
+            # else:
+            #     raise Exception("No CV file generated")
+
+            # return {
+            #     "success": True,
+            #     "final_cv_url": workflow_context["final_cv_url"],
+            #     "ats_score": workflow_context["current_ats_score"],
+            #     "iterations_used": workflow_context["iteration"],
+            #     "processing_time": datetime.now().isoformat()
+            # }
 
             return {
-                "success": True,
-                "final_cv_url": workflow_context["final_cv_url"],
-                "ats_score": workflow_context["current_ats_score"],
-                "iterations_used": workflow_context["iteration"],
-                "processing_time": datetime.now().isoformat()
+                "success": True
             }
 
         except Exception as e:
@@ -158,6 +164,7 @@ class CVAutomationWorkflow:
 
         # Create crew
         crew = Crew(
+            name=f"CV Automation Crew - Iteration {context['iteration']}",
             agents=[
                 # resume_analyzer,
                 overview_writer,
@@ -172,21 +179,3 @@ class CVAutomationWorkflow:
         )
 
         return crew
-
-# Usage example
-if __name__ == "__main__":
-    # Example usage
-    workflow = CVAutomationWorkflow()
-
-    # Sample payload (replace with actual data)
-    with open(r"D:\Projects\Professional Portfolio Project\cv_gen_BE\templates\payload_ramindu.json", 'r') as f:
-        sample_payload = json.load(f)
-
-    for k,v in sample_payload.items():
-        print(f"{k}: {v}")
-
-    try:
-        final_result = workflow.run(sample_payload, "my-cv-bucket")
-        print(f"Success! CV URL: {final_result['final_cv_url']}")
-    except Exception as ex:
-        print(f"Error: {ex}")

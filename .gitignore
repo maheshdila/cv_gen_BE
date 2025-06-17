@@ -7,3 +7,4 @@ __pycache__/
 cv-generator/
 .idea/
 .env
+cv/
