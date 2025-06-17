@@ -452,6 +452,7 @@ class CVGenerator(BaseTool):
             # Generate CV
             cv_path = TypstService.generate_cv(overview, payload)
 
+
             # Verify the file was created
             if not os.path.exists(cv_path):
                 raise Exception(f"CV file was not created at {cv_path}")
@@ -634,6 +635,7 @@ class ATSScorer(BaseTool):
 
 class S3Uploader(BaseTool):
     """Tool for uploading files to S3"""
+
 
     name: str = "S3 Uploader"
     description: str = "Uploads CV files to S3 bucket"

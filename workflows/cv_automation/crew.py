@@ -111,10 +111,12 @@ class CVAutomationWorkflow:
                     print("Optimizing for next iteration...")
 
             print("Generating CV from optimized form data...")
-            generate_resume(workflow_context["overview"], payload.formData)
+            workflow_context["cv_path"] = generate_resume(workflow_context["overview"], payload.formData)
 
-            # # Upload final CV to S3
-            # if workflow_context["cv_path"]:
+            #Upload final CV to S3
+            #if workflow_context["cv_path"]:
+
+
             #     final_url = self.s3_uploader.upload_cv(
             #         workflow_context["cv_path"],
             #         s3_bucket_name
@@ -133,7 +135,8 @@ class CVAutomationWorkflow:
             # }
 
             return {
-                "success": True
+                "success": True,
+                "pdf path": workflow_context["cv_path"]
             }
 
         except Exception as e:

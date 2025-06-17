@@ -34,6 +34,7 @@ def generate_resume_typst(overview: str, form_data: FormData, output_filename: s
     # Save Typst source to the file
     doc.save_to_file(output_filename)
     print(f"Typst resume generated successfully! Saved to {output_filename}")
+    return output_filename
 
 
 # Compile a .typ file into a .pdf
