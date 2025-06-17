@@ -1,0 +1,86 @@
+{
+  "jobDescription": "",
+
+  "formData": {
+    "personalDetails": {
+      "fullName": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "linkedIn": "",
+      "gitHub": "",
+      "portfolio": "",
+      "receiveEmails": false
+    },
+
+    "workExperience": [
+      {
+        "jobTitle": "",
+        "company": "",
+        "location": "",
+        "startDate": "",
+        "endDate": "",
+        "description": "",
+        "currentlyWorking": false
+      }
+    ],
+
+    "education": [
+      {
+        "degree": "",
+        "institution": "",
+        "fieldOfStudy": "",
+        "startDate": "",
+        "endDate": "",
+        "description": "",
+        "currentlyStudying": false
+      }
+    ],
+
+    "projects": [
+      {
+        "name": "",
+        "startDate": "",
+        "endDate": "",
+        "description": "",
+        "skills": [],
+        "link": "",
+        "currentlyWorking": false
+      }
+    ],
+
+    "skills": [
+      {
+        "category": "",
+        "technologies": []
+      }
+    ],
+
+    "achievements": [
+      {
+        "title": "",
+        "description": "",
+        "date": ""
+      }
+    ],
+
+    "certifications": [
+      {
+        "title": "",
+        "issuer": "",
+        "date": "",
+        "link": ""
+      }
+    ],
+
+    "referees": [
+      {
+        "name": "",
+        "position": "",
+        "company": "",
+        "email": "",
+        "phone": ""
+      }
+    ]
+  }
+}
