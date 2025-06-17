@@ -34,7 +34,7 @@ def generate_resume_typst(overview: str, form_data: FormData, output_filename: s
     # Save Typst source to the file
     doc.save_to_file(output_filename)
     print(f"Typst resume generated successfully! Saved to {output_filename}")
-    return output_filename
+
 
 
 # Compile a .typ file into a .pdf
@@ -44,6 +44,7 @@ def compile_typst_to_pdf(typst_filename: str, pdf_filename: str):
         output=pdf_filename
     )
     print(f"PDF resume generated successfully! Saved to {pdf_filename}")
+    return pdf_filename
 
 
 # Entry point for generating and compiling from a JSON payload
@@ -68,5 +69,5 @@ def generate_resume(overview: str, form_data: FormData):
         form_data=form_data,
         output_filename=typst_output_filename
     )
-    compile_typst_to_pdf(typst_output_filename, pdf_output_filename)
+    return compile_typst_to_pdf(typst_output_filename, pdf_output_filename)
 
