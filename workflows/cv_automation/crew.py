@@ -111,8 +111,9 @@ class CVAutomationWorkflow:
                     print("Optimizing for next iteration...")
 
             print("Generating CV from optimized form data...")
-            pdf_path=generate_resume(workflow_context["overview"], payload.formData)
+            pdf_path=generate_resume(workflow_context,workflow_context["overview"], payload.formData)
             print("pdf path from crew is ",pdf_path)
+            print("pdf path from workflow{cv path}",workflow_context["cv_path"])
             #Upload final CV to S3
             #if workflow_context["cv_path"]:
 

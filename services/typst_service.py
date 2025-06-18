@@ -44,11 +44,11 @@ def compile_typst_to_pdf(typst_filename: str, pdf_filename: str):
         output=pdf_filename
     )
     print(f"PDF resume generated successfully! Saved to {pdf_filename}")
-    return pdf_filename
+    #return pdf_filename
 
 
 # Entry point for generating and compiling from a JSON payload
-def generate_resume(overview: str, form_data: FormData):
+def generate_resume(workflow_context:dict ,overview: str, form_data: FormData):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
     # Get the absolute path to the project root
@@ -58,7 +58,7 @@ def generate_resume(overview: str, form_data: FormData):
     # Absolute filepaths
     typst_output_filename = os.path.join(project_root, "cv", "typ", f"cv_{timestamp}.typ")
     pdf_output_filename = os.path.join(project_root, "cv", "pdf", f"cv_{timestamp}.pdf")
-
+    workflow_context["cv_path"] =pdf_output_filename
     # Ensure directories exist
     os.makedirs(os.path.dirname(typst_output_filename), exist_ok=True)
     os.makedirs(os.path.dirname(pdf_output_filename), exist_ok=True)
@@ -70,4 +70,5 @@ def generate_resume(overview: str, form_data: FormData):
         output_filename=typst_output_filename
     )
     compile_typst_to_pdf(typst_output_filename, pdf_output_filename)
+
     return pdf_output_filename
