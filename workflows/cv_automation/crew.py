@@ -17,7 +17,7 @@ from .tools import ATSScorer, S3Uploader
 from .utils import PayloadValidator
 
 from services.typst_service import generate_resume
-
+from services.s3Uploader import upload_to_s3_agent
 
 class CVAutomationWorkflow:
     """Main workflow orchestrator for CV automation using Crew AI"""
@@ -114,6 +114,11 @@ class CVAutomationWorkflow:
             pdf_path=generate_resume(workflow_context,workflow_context["overview"], payload.formData)
             print("pdf path from crew is ",pdf_path)
             print("pdf path from workflow{cv path}",workflow_context["cv_path"])
+
+            workflow_context["final_cv_url"] = upload_to_s3_agent(workflow_context["cv_path"])
+
+
+
             #Upload final CV to S3
             #if workflow_context["cv_path"]:
 
@@ -137,7 +142,8 @@ class CVAutomationWorkflow:
 
             return {
                 "success": True,
-                "pdf path": workflow_context["cv_path"]
+                "pdf path": workflow_context["cv_path"],
+                "cv_url": workflow_context["final_cv_url"]
             }
 
         except Exception as e:
