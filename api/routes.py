@@ -17,6 +17,8 @@ router = APIRouter()
 async def generate_cv_types(user_input: UserQuery):
     print("message received")
     try:
+        email = user_input.formData.personalDetails["email"]
+        await user_query_save(user_input, email)
         workflow = CVAutomationWorkflow()
         final_result = workflow.run(user_input, "my-cv-bucket")
         # print(f"Success! CV URL: {final_result['final_cv_url']}")
