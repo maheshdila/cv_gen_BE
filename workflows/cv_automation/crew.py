@@ -137,7 +137,7 @@ class CVAutomationWorkflow:
 
             return {
                 "success": True,
-                "pdf path": pdf_path
+                "pdf path": workflow_context["cv_path"]
             }
 
         except Exception as e:
